@@ -26,6 +26,8 @@ Available in two versions:
 - Weather-matched background particles (rain, snow, thunder, etc.)
 - Atmosphere color overlay with toggle
 
+> If the particle effect lags, double-click the City Weather particle button to restore smooth performance.
+
 ### 🎬 Dynamic Video Background
 - Upload MP4/WebM/OGG video files
 - Always renders at the lowest layer
