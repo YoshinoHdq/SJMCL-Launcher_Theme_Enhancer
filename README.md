@@ -1,6 +1,16 @@
-﻿# Launcher Theme Enhancer
+﻿<div align=center>
 
-A comprehensive SJMCL extension that combines **City Weather**, **Dynamic Video Background**, and **Weather Particle Effects** into one integrated plugin.
+# Launcher Theme Enhancer
+
+Combines City Weather, Dynamic Video Background, and Weather Particle Effects into one integrated plugin 🎨
+
+</div>
+
+---
+
+## 简介
+
+Launcher Theme Enhancer is a comprehensive SJMCL extension that merges three previously separate plugins into one seamless experience, resolving the conflict issues between them.
 
 Available in two versions:
 - **English** (org.yoshino.launcher-theme-enhancer)
@@ -11,7 +21,6 @@ Available in two versions:
 ### City Weather
 - Real-time weather data via Open-Meteo API
 - 200+ cities worldwide
-- Weather-app style card display (temperature, humidity, wind, feels-like)
 - Weather-matched background particles (rain, snow, thunder, etc.)
 - Atmosphere color overlay with toggle
 
@@ -19,24 +28,21 @@ Available in two versions:
 - Upload MP4/WebM/OGG video files
 - Always renders at the lowest layer
 - Volume control slider
-- Persistent video storage (survives restart)
 - Play/Pause/Remove controls
 
 ### Theme Particle Effects (10 types)
-- Rain, Snow, Sandstorm, Starry Sky, Aurora
-- Falling Leaves, Underwater, Fire, Sunset, Minecraft Style
-
-## Layer System
-- Video Background: bottom layer
-- City Weather Particles: middle layer
-- Theme Particles: top layer
+- Rain, Snow, Sandstorm, Starry Sky, Aurora, Falling Leaves, Underwater, Fire, Sunset, Minecraft Style
 
 ## Installation
+
 1. Download the .sjmclx file from Releases
 2. Open SJMCL → Settings → Extension Management → Import
 3. Select the downloaded file and enable it
 
-## Credits
-- **Author**: hemekewayoshino
-- **Version**: 0.1.0
-- Weather data: Open-Meteo API
+## Compatibility
+
+- Minimum launcher version: 1.1.3
+
+## License
+
+MIT
