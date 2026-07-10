@@ -1,0 +1,1 @@
+const PREFIX="lte-";export function getLocal<T>(key:string,defaultValue:T):T{try{var v=localStorage.getItem(PREFIX+key);return v!==null?JSON.parse(v):defaultValue;}catch{return defaultValue;}}export function setLocal(key:string,value:unknown):void{try{localStorage.setItem(PREFIX+key,JSON.stringify(value));}catch{}}

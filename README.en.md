@@ -2,46 +2,59 @@
 
 # Launcher Theme Enhancer
 
-Combines City Weather, Dynamic Video Background, and Weather Particle Effects into one integrated plugin 🎨
+Integrates City Weather, Dynamic Video Background, and Particle Effects into one seamless launcher enhancement plugin 🎨
 
 **English · [简体中文](README.md)**
 
 </div>
-
 ---
 
-## 简介
+## About
 
-Launcher Theme Enhancer is a comprehensive SJMCL extension that merges three previously separate plugins into one seamless experience, resolving the conflict issues between them.
+Launcher Theme Enhancer is an SJMCL extension that merges three previously separate plugins into one seamless experience, resolving the conflict issues between them.
 
-Available in two versions:
-- **English** (org.yoshino.launcher-theme-enhancer)
-- **中文版** (org.yoshino.launcher-theme-enhancer.zh)
+Built-in language toggle between Chinese and English in the settings panel — no need to install separate language versions.
 
 ## Features
 
-### 🌤 City Weather
+### 🌤 City Weather (Enhanced)
 - Real-time weather data via Open-Meteo API
 - 200+ cities worldwide
-- Weather-matched background particles (rain, snow, thunder, etc.)
-- Atmosphere color overlay with toggle
-
-> If the particle effect lags, double-click the City Weather particle button to restore smooth performance.
+- Weather-matched particle effects and atmosphere overlays
+- Improved accuracy and smoother transitions compared to v0.1.0
 
 ### 🎬 Dynamic Video Background
-- Upload MP4/WebM/OGG video files
-- Always renders at the lowest layer
-- Volume control slider
-- Play/Pause/Remove controls
+- Upload MP4/WebM video files as launcher background
+- Fixed the old issue where video background overlapped other extension pages
+- Volume control, play/pause/remove
 
-### ✨ Theme Particle Effects (10 types)
-- Rain, Snow, Sandstorm, Starry Sky, Aurora, Falling Leaves, Underwater, Fire, Sunset, Minecraft Style
+### ✨ Particle Effects
+
+**New particle effects:**
+- Enchantment — floating enchantment runes
+- Sculk — wardens-inspired sculk particles
+- Freeze — ice and frost particles
+- Code — matrix-style code rain
+- Dust — floating dust in the air
+- Vitality — vibrant glowing orbs
+
+**Rewritten and optimized:**
+- Flame, Snow, Sunset, Underwater, Aurora — fully rewritten for smoother performance
+
+**Removed:**
+- Minecraft-style particles (removed during integration refactoring)
+
+### 🌐 Language Switch
+- Toggle between Chinese and English in settings
+- No need to download separate language versions
+
+> ⚠️ **Note: Memory persistence for particles and video background has been removed.** Settings need to be re-applied each time the launcher opens. We apologize for this inconvenience. Due to technical limitations, this feature may be re-added in future updates.
 
 ## Installation
 
-1. Download the .sjmclx file from Releases
+1. Download org.yoshino.launcher-theme-enhancer-1.0.0.sjmclx from Releases
 2. Open SJMCL → Settings → Extension Management → Import
-3. Select the downloaded file and enable it
+3. Select the file and enable it
 
 ## Compatibility
 
