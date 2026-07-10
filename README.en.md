@@ -15,12 +15,13 @@ Launcher Theme Enhancer is an SJMCL extension that merges three previously separ
 
 Built-in language toggle between Chinese and English in the settings panel — no need to install separate language versions.
 
+Does not support coexistence with the old standalone plugins (sjmcl-video-background, sjmcl-weather-effects, sjmcl-city-weather). Please uninstall them before using this integrated version for the best experience.
+
 ## Features
 
-### 🌤 City Weather (Enhanced)
+### 🌤 City Weather
 - Real-time weather data via Open-Meteo API
 - 200+ cities worldwide
-- Weather-matched particle effects and atmosphere overlays
 - Improved accuracy and smoother transitions compared to v0.1.0
 
 ### 🎬 Dynamic Video Background
@@ -30,19 +31,17 @@ Built-in language toggle between Chinese and English in the settings panel — n
 
 ### ✨ Particle Effects
 
-**New particle effects:**
 - Enchantment — floating enchantment runes
-- Sculk — wardens-inspired sculk particles
+- Sculk — warden-inspired sculk particles
 - Freeze — ice and frost particles
 - Code — matrix-style code rain
-- Dust — floating dust in the air
+- Dust — floating dust particles
 - Vitality — vibrant glowing orbs
-
-**Rewritten and optimized:**
-- Flame, Snow, Sunset, Underwater, Aurora — fully rewritten for smoother performance
-
-**Removed:**
-- Minecraft-style particles (removed during integration refactoring)
+- Flame — rewritten for smoother performance
+- Snow — rewritten for smoother performance
+- Sunset — rewritten for smoother performance
+- Underwater — rewritten for smoother performance
+- Aurora — rewritten for smoother performance
 
 ### 🌐 Language Switch
 - Toggle between Chinese and English in settings
