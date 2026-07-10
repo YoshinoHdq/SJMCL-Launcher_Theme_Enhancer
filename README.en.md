@@ -33,19 +33,19 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 
 - Enchantment — floating enchantment runes
 - Sculk — warden-inspired sculk particles
-- Freeze — ice and frost particles
-- Code — matrix-style code rain
-- Dust — floating dust particles
-- Vitality — vibrant glowing orbs
-- Flame — rewritten for smoother performance
-- Snow — rewritten for smoother performance
-- Sunset — rewritten for smoother performance
-- Underwater — rewritten for smoother performance
-- Aurora — rewritten for smoother performance
-- Rain
-- Sandstorm
-- Starry Sky
-- Falling Leaves
+- Freeze — ice and frost covering the interface
+- Code — matrix-style green code rain
+- Dust — fine dust floating in the air
+- Vitality — vibrant colored glowing orbs
+- Flame — dancing flame particles
+- Snow — gently falling snowflakes
+- Sunset — warm sunset glow
+- Underwater — underwater bubbles and light rays
+- Aurora — flowing aurora bands
+- Rain — drizzling raindrops
+- Sandstorm — swirling sand and dust
+- Starry Sky — twinkling stars
+- Falling Leaves — leaves drifting in the wind
 
 ### 🌐 Language Switch
 - Toggle between Chinese and English in settings
@@ -66,3 +66,7 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 ## License
 
 MIT
+
+---
+
+*This plugin was developed with the assistance of AI coding tools.*
