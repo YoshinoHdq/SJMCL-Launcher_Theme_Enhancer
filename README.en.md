@@ -27,9 +27,9 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 ### 🎬 Dynamic Video Background
 - Upload MP4/WebM video files as launcher background
 - Fixed the old issue where video background overlapped other extension pages
-- Volume control, play/pause/remove
+- Volume control, play/remove
 
-### ✨ Particle Effects
+### ✨ Particle Effects (15 types)
 
 - Enchantment — floating enchantment runes
 - Sculk — warden-inspired sculk particles
@@ -42,18 +42,22 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 - Sunset — rewritten for smoother performance
 - Underwater — rewritten for smoother performance
 - Aurora — rewritten for smoother performance
+- Rain
+- Sandstorm
+- Starry Sky
+- Falling Leaves
 
 ### 🌐 Language Switch
 - Toggle between Chinese and English in settings
 - No need to download separate language versions
 
-> ⚠️ **Note: Memory persistence for particles and video background has been removed.** Settings need to be re-applied each time the launcher opens. We apologize for this inconvenience. Due to technical limitations, this feature may be re-added in future updates.
+> ⚠️ **Note: Memory persistence for particles and video background has been removed.** Settings need to be re-applied each time the launcher opens. We apologize for this inconvenience. Due to technical limitations, this feature will not be added back in the near future.
 
 ## Installation
 
 1. Download org.yoshino.launcher-theme-enhancer-1.0.0.sjmclx from Releases
-2. Open SJMCL → Settings → Extension Management → Import
-3. Select the file and enable it
+2. Open SJMCL → Drag the file into the launcher and enable it
+3. Open the home card to start using it
 
 ## Compatibility
 
