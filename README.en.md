@@ -55,10 +55,9 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 
 ## Installation
 
-1. Download org.yoshino.launcher-theme-enhancer-1.0.0.sjmclx from Releases
-2. Open SJMCL → Drag the file into the launcher and enable it
-3. Open the home card to start using it
-
+1. Download the .sjmclx file from Releases
+2. Open SJMCL → Settings → Extension Management → Import. Supports file selection and drag-and-drop import
+3. Enable and enjoy
 ## Compatibility
 
 - Minimum launcher version: 1.1.3
