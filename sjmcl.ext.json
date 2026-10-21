@@ -1,8 +1,8 @@
 {
   "identifier": "org.yoshino.launcher-theme-enhancer",
   "name": "Launcher Theme Enhancer",
-  "description": "Weather, video background & particle effects | 天气、视频背景与粒子特效",
-  "version": "0.1.1",
+  "description": "Weather, video backgrounds, particle effects & mouse trails | 天气、动态背景、粒子与鼠标拖尾",
+  "version": "2.0.0",
   "author": "hemekewayoshino",
   "frontend": {
     "entry": "frontend/index.js"

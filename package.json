@@ -1,7 +1,7 @@
 {
   "name": "org.yoshino.launcher-theme-enhancer",
-  "version": "0.2.0",
-  "description": "Weather, video background & particle effects",
+  "version": "2.0.0",
+  "description": "Weather, video backgrounds, particle effects & mouse trails",
   "private": true,
   "scripts": {
     "build": "node scripts/build.mjs",
