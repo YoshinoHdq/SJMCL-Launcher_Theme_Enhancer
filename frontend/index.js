@@ -2906,6 +2906,12 @@ themeEffects.sculk = {
     themeParticles: "Theme Particles",
     videoBackground: "Video Background",
     themeSwitchHint: "The video background remains independent from this particle switch.",
+    homeWidgets: "Home Widgets",
+    homeWidgetsHint: "Choose which feature cards appear on the launcher home page.",
+    homeWidgetsApply: "Apply & Reload",
+    homeWidgetsPending: "Changes will take effect after the extension reloads.",
+    homeWidgetsAllHidden: "All home widgets are hidden. You can re-enable them here at any time.",
+    homeWidgetsSingleWarning: "Only one home widget will remain visible. Its saved layout may reset after reload.",
     particleEffects: "Particle Effects",
     saturationOverlay: "saturation overlay",
     themeEffects: "Theme Effects",
@@ -3007,6 +3013,12 @@ themeEffects.sculk = {
     themeParticles: "主题粒子",
     videoBackground: "视频背景",
     themeSwitchHint: "视频背景独立控制，不受此粒子开关影响。",
+    homeWidgets: "主页卡片",
+    homeWidgetsHint: "选择要在启动器主页显示的功能卡片。",
+    homeWidgetsApply: "应用并刷新",
+    homeWidgetsPending: "修改将在扩展刷新后生效。",
+    homeWidgetsAllHidden: "已隐藏全部主页卡片，你仍可随时在这里重新开启。",
+    homeWidgetsSingleWarning: "仅保留一张主页卡片时，其已保存的布局状态可能会重置。",
     particleEffects: "粒子特效",
     saturationOverlay: "饱和度覆盖",
     themeEffects: "主题特效",
@@ -3993,6 +4005,11 @@ themeEffects.sculk = {
       const [tInt, setTInt] = useState(window._ti || 50);
       const [tRunning, setTRunning] = useState(Boolean(window._trun));
       const [themeOpen, setThemeOpen] = useState(false);
+      const [showCityWidget, setShowCityWidget] = useState(getLocal("home_show_city_weather", true));
+      const [showThemeWidget, setShowThemeWidget] = useState(getLocal("home_show_theme_enhancer", true));
+      const [showMouseWidget, setShowMouseWidget] = useState(getLocal("home_show_mouse_effects", true));
+      const [homeWidgetsDirty, setHomeWidgetsDirty] = useState(false);
+      const visibleHomeWidgetCount = Number(showCityWidget) + Number(showThemeWidget) + Number(showMouseWidget);
       const selectedTheme = getThemeOption(tType);
       const themeAccent = selectedTheme.colors[1];
       const themeGradient = "linear-gradient(90deg, " + selectedTheme.colors[0] + ", " + selectedTheme.colors[1] + ", " + selectedTheme.colors[2] + ", " + selectedTheme.colors[0] + ")";
@@ -4004,6 +4021,8 @@ themeEffects.sculk = {
       const previousWeatherLine = useCrossfadeGradient(React, weatherGradient);
       const videoAccent = "#69e39a";
       const videoGradient = "linear-gradient(90deg, #51c79a, #8af0c0, #d9fff0, #51c79a)";
+      const homeWidgetAccent = "#8c6cff";
+      const homeWidgetGradient = "linear-gradient(90deg, #52e2ff, #8c6cff, #ff6fc8, #52e2ff)";
       function renderAccentLine(gradient, previous, paused) {
         return el(
           Box,
@@ -4083,6 +4102,64 @@ themeEffects.sculk = {
             }
           },
           label
+        );
+      }
+      function updateHomeWidgetSetting(setter, value) {
+        setter(value);
+        setHomeWidgetsDirty(true);
+      }
+      function applyHomeWidgetVisibility() {
+        setLocal("home_show_city_weather", showCityWidget);
+        setLocal("home_show_theme_enhancer", showThemeWidget);
+        setLocal("home_show_mouse_effects", showMouseWidget);
+        setHomeWidgetsDirty(false);
+        if (host.actions && typeof host.actions.reloadSelf === "function") {
+          host.actions.reloadSelf();
+        }
+      }
+      function homeWidgetRow(accent, initials, title, checked, onChange) {
+        return el(
+          HStack,
+          {
+            justify: "space-between",
+            align: "center",
+            spacing: 3,
+            p: 2,
+            borderRadius: "lg",
+            bg: "rgba(255,255,255,0.035)",
+            border: "1px solid " + accent + (checked ? "48" : "1f")
+          },
+          el(
+            HStack,
+            { spacing: 2, align: "center" },
+            el(
+              Box,
+              {
+                w: "24px",
+                h: "24px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "md",
+                bg: accent + "25",
+                color: accent,
+                fontSize: "9px",
+                fontWeight: "bold",
+                border: "1px solid " + accent + "52"
+              },
+              initials
+            ),
+            el(Text, { fontSize: "sm", color: checked ? "gray.100" : "gray.400", fontWeight: "semibold" }, title)
+          ),
+          el(Switch, {
+            isChecked: checked,
+            colorScheme: "blue",
+            size: "sm",
+            onChange: function() {
+              onChange();
+            },
+            "aria-label": title
+          })
         );
       }
       useEffect(function() {
@@ -4174,7 +4251,7 @@ themeEffects.sculk = {
               el(Text, { fontSize: "lg", fontWeight: "bold", color: "white" }, t("themeEnhancer")),
               el(Text, { fontSize: "xs", color: "gray.500" }, t("themeEnhancerDesc"))
             ),
-            el(Badge, { colorScheme: "purple", variant: "subtle", borderRadius: "full", fontSize: "xs", px: 3 }, "v2.0.0")
+            el(Badge, { colorScheme: "purple", variant: "subtle", borderRadius: "full", fontSize: "xs", px: 3 }, "v2.1.0")
           ),
           // ===== Language Selector =====
           el(
@@ -4189,6 +4266,89 @@ themeEffects.sculk = {
                 { spacing: 2, flexWrap: "wrap" },
                 localeButton("en", "English"),
                 localeButton("zh", "中文")
+              )
+            )
+          ),
+          // ===== Section: Home Widget Visibility =====
+          el(
+            Box,
+            {
+              p: 3,
+              borderRadius: "xl",
+              bg: "rgba(255,255,255,0.035)",
+              border: "1px solid " + homeWidgetAccent + "3d",
+              position: "relative",
+              overflow: "hidden",
+              style: { "--card-accent": homeWidgetAccent }
+            },
+            renderAccentLine(homeWidgetGradient, null, false),
+            el(
+              VStack,
+              { spacing: 3, align: "stretch", position: "relative", zIndex: 1 },
+              sectionHeader(
+                homeWidgetAccent,
+                "HW",
+                t("homeWidgets"),
+                { color: visibleHomeWidgetCount > 0 ? "purple" : "gray", text: visibleHomeWidgetCount + " / 3" }
+              ),
+              el(Text, { fontSize: "xs", color: "gray.500" }, t("homeWidgetsHint")),
+              homeWidgetRow(
+                "#69bbd2",
+                "CW",
+                t("cityWeather"),
+                showCityWidget,
+                function() {
+                  updateHomeWidgetSetting(setShowCityWidget, !showCityWidget);
+                }
+              ),
+              homeWidgetRow(
+                themeAccent,
+                "TE",
+                t("themeEnhancer"),
+                showThemeWidget,
+                function() {
+                  updateHomeWidgetSetting(setShowThemeWidget, !showThemeWidget);
+                }
+              ),
+              homeWidgetRow(
+                "#52e2ff",
+                "ME",
+                t("mouseEffects"),
+                showMouseWidget,
+                function() {
+                  updateHomeWidgetSetting(setShowMouseWidget, !showMouseWidget);
+                }
+              ),
+              visibleHomeWidgetCount === 0 ? el(Text, { fontSize: "xs", color: "orange.300" }, t("homeWidgetsAllHidden")) : null,
+              visibleHomeWidgetCount === 1 ? el(Text, { fontSize: "xs", color: "yellow.300" }, t("homeWidgetsSingleWarning")) : null,
+              el(
+                HStack,
+                { justify: "space-between", align: "center", spacing: 3, flexWrap: "wrap" },
+                homeWidgetsDirty ? el(Text, { fontSize: "xs", color: "blue.300" }, t("homeWidgetsPending")) : null,
+                el(
+                  Box,
+                  {
+                    as: "button",
+                    type: "button",
+                    className: "lte-mouse-selector lte-card-selector",
+                    px: 3,
+                    py: 1.5,
+                    borderRadius: "lg",
+                    bg: homeWidgetsDirty ? homeWidgetAccent + "2b" : "rgba(255,255,255,0.035)",
+                    border: "1px solid " + (homeWidgetsDirty ? homeWidgetAccent + "88" : "rgba(255,255,255,0.08)"),
+                    color: homeWidgetsDirty ? "white" : "gray.500",
+                    cursor: homeWidgetsDirty ? "pointer" : "default",
+                    disabled: !homeWidgetsDirty,
+                    fontSize: "xs",
+                    fontWeight: "semibold",
+                    onClick: applyHomeWidgetVisibility,
+                    style: {
+                      "--card-accent": homeWidgetAccent,
+                      "--card-glow": homeWidgetAccent + "2e"
+                    }
+                  },
+                  t("homeWidgetsApply")
+                )
               )
             )
           ),
@@ -4523,7 +4683,7 @@ themeEffects.sculk = {
             el(
               VStack,
               { spacing: 1, align: "stretch" },
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("version") + " 2.0.0"),
+              el(Text, { fontSize: "xs", color: "gray.500" }, t("version") + " 2.1.0"),
               el(Text, { fontSize: "xs", color: "gray.500" }, t("author") + ": hemekewayoshino"),
               el(Box, { h: "1px", bg: "rgba(255,255,255,0.06)", my: 1 }),
               el(Text, { fontSize: "xs", color: "gray.500" }, t("layerOrder"))
@@ -4589,32 +4749,38 @@ themeEffects.sculk = {
         restoreVideoBackground();
       }, 0);
     }
+    const homeWidgets = [];
+    if (getLocal("home_show_city_weather", true)) {
+      homeWidgets.push({
+        key: "city-weather",
+        title: "City Weather",
+        description: "Real-time weather with an optional dynamic ambience",
+        icon: "cloud-sun",
+        Component: createCityWeatherWidget(api)
+      });
+    }
+    if (getLocal("home_show_theme_enhancer", true)) {
+      homeWidgets.push({
+        key: "theme-enhancer",
+        title: "Theme Enhancer",
+        description: "Video background + 21 custom particle effects",
+        icon: "palette",
+        Component: createThemeEnhancerWidget(api)
+      });
+    }
+    if (getLocal("home_show_mouse_effects", true)) {
+      homeWidgets.push({
+        key: "mouse-effects",
+        title: "Mouse Effects",
+        description: "Cursor stardust and pointer feedback",
+        icon: "mouse-pointer",
+        defaultWidth: 320,
+        minWidth: 260,
+        Component: createMouseEffectsWidget(api)
+      });
+    }
     return {
-      homeWidgets: [
-        {
-          key: "city-weather",
-          title: "City Weather",
-          description: "Real-time weather with an optional dynamic ambience",
-          icon: "cloud-sun",
-          Component: createCityWeatherWidget(api)
-        },
-        {
-          key: "theme-enhancer",
-          title: "Theme Enhancer",
-          description: "Video background + 21 custom particle effects",
-          icon: "palette",
-          Component: createThemeEnhancerWidget(api)
-        },
-        {
-          key: "mouse-effects",
-          title: "Mouse Effects",
-          description: "Cursor stardust and pointer feedback",
-          icon: "mouse-pointer",
-          defaultWidth: 320,
-          minWidth: 260,
-          Component: createMouseEffectsWidget(api)
-        }
-      ],
+      homeWidgets,
       settingsPage: {
         Component: createSettingsPage(api)
       },

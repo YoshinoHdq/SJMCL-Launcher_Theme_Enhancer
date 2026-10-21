@@ -2,7 +2,7 @@
   "identifier": "org.yoshino.launcher-theme-enhancer",
   "name": "Launcher Theme Enhancer",
   "description": "Weather, video backgrounds, particle effects & mouse trails | 天气、动态背景、粒子与鼠标拖尾",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "hemekewayoshino",
   "frontend": {
     "entry": "frontend/index.js"

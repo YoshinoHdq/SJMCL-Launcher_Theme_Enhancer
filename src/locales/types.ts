@@ -38,6 +38,12 @@ export interface LocaleStrings {
   themeParticles: string;
   videoBackground: string;
   themeSwitchHint: string;
+  homeWidgets: string;
+  homeWidgetsHint: string;
+  homeWidgetsApply: string;
+  homeWidgetsPending: string;
+  homeWidgetsAllHidden: string;
+  homeWidgetsSingleWarning: string;
   particleEffects: string;
   saturationOverlay: string;
   themeEffects: string;

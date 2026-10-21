@@ -91,6 +91,8 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 - When no video is selected, a compact file picker replaces the former oversized block
 - Weather, theme particle, and video volume sliders share the same colored interaction style
 - Settings stay synchronized with the home cards for toggles, particle type, intensity, and language
+- City Weather, Theme Enhancer, and Mouse Effects home widgets can be shown or hidden independently
+- Home widget visibility changes are applied together through the Apply & Reload action
 
 ## Installation
 
