@@ -6,7 +6,7 @@ Integrates City Weather, Dynamic Video Background, and Particle Effects into one
 
 **English · [简体中文](README.md)**
 
-<img src="docs/images/launcher-preview.webp" alt="Launcher Theme Enhancer 2.0.0 interface preview" width="960">
+<img src="docs/images/launcher-preview.webp" alt="Launcher Theme Enhancer interface preview" width="960">
 
 </div>
 ---
@@ -22,15 +22,15 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 ## Features
 
 ### 🌤 City Weather
-- Real-time weather data via Open-Meteo API
-- 200+ cities worldwide
+- Real-time weather data via the [Open-Meteo](https://open-meteo.com/) API (weather data by Open-Meteo)
+- Worldwide lookup by city name (Open-Meteo geocoding)
 - Improved accuracy and smoother transitions compared to v0.1.0
 - Adds a Dynamic Ambience switch that controls only the weather gradient and icon animation; search and weather data remain available
 
 ### 🎬 Dynamic Video Background
-- Upload MP4/WebM video files as launcher background
+- Upload MP4/WebM video files as launcher background; videos over 100MB show a performance/storage warning but can still be used after confirmation
 - Fixed the old issue where video background overlapped other extension pages
-- Volume control, play/remove
+- Volume control, play/remove; shows a notice if saving or restoring fails
 
 ### ✨ Particle Effects (21 types)
 
@@ -58,6 +58,8 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 
 ### 🌐 Language Switch
 - Toggle between Chinese and English in settings
+- Remembers the last choice; first launch follows the system language
+- Home widget titles switch immediately with the language, no reload required
 - No need to download separate language versions
 
 ### 💾 Persistent State
@@ -77,6 +79,12 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 - No particles are created while the pointer is stationary, and the canvas loop pauses when idle
 - Includes an independent toggle and intensity control and runs alongside theme particles
 - Disabled by default and can be enabled from the home card
+
+### 🚀 Performance & Stability
+- Three performance modes: Auto / High Quality / Power Saver, using the same selector style as theme particles
+- Auto caps render resolution at 1.5x screen density, High Quality up to 2x, Power Saver uses 1x and caps theme particles at 30 FPS
+- Video and animations pause automatically while the launcher window is hidden and resume when visible
+- The background layer falls back gracefully and re-attaches when the launcher DOM changes; canvases re-measure on resize
 
 ### 🎛 Unified Card Interaction
 - City Weather, Theme Enhancer, and Mouse Effects now share the same title icon, status badge, and toggle language
@@ -99,6 +107,20 @@ Does not support coexistence with the old standalone plugins (sjmcl-video-backgr
 1. Download the .sjmclx file from Releases
 2. Open SJMCL → Settings → Extension Management → Import. Supports file selection and drag-and-drop import
 3. Enable and enjoy
+## Development
+
+```bash
+npm install
+npm run dev                  # build into the launcher extension dir and hot-reload via deeplink
+npm run build                # release package: dist/<identifier>-<version>.sjmclx
+npm run build -- --dev       # dev package with a -dev suffix
+npm run bump -- 2.2.0        # sync versions in package.json, sjmcl.ext.json and the settings page
+```
+
+The runtime source lives in `src/` and is concatenated into a single scope in the order defined by `scripts/source-order.mjs`. Theme particles are split by effect under `src/effects/theme/`; add a new effect by creating a file and registering it in the order list. Cross-file `import` is not supported yet; the modules will evolve into proper ES modules later.
+
+`frontend/index.js` and `dist/` are build outputs — do not edit them directly. The build injects the version from `sjmcl.ext.json` and validates that Chinese/English locale keys match the type definitions.
+
 ## Compatibility
 
 - Minimum launcher version: 1.1.3

@@ -6,7 +6,7 @@
 
 **[English](README.en.md) · 简体中文**
 
-<img src="docs/images/launcher-preview.webp" alt="Launcher Theme Enhancer 2.0.0 界面预览" width="960">
+<img src="docs/images/launcher-preview.webp" alt="Launcher Theme Enhancer 界面预览" width="960">
 
 </div>
 ---
@@ -22,15 +22,15 @@ Launcher Theme Enhancer 是一款 SJMCL 扩展，将此前三个独立插件整�
 ## 功能特色
 
 ### 🌤 城市天气
-- 通过 Open-Meteo API 获取实时天气数据
-- 覆盖全球 200+ 城市
+- 通过 [Open-Meteo](https://open-meteo.com/) API 获取实时天气数据（天气数据由 Open-Meteo 提供）
+- 按城市名全球查询（Open-Meteo 地理编码）
 - 相比旧版，天气响应更精准、过渡更平滑
 - 新增“动态氛围”开关，可独立关闭天气渐变与图标动效，不影响查询和数据
 
 ### 🎬 动态视频背景
-- 上传 MP4/WebM 视频文件作为启动器背景
+- 上传 MP4/WebM 视频文件作为启动器背景；超过 100MB 会先提示性能与存储风险，确认后仍可使用
 - 修复了旧版动态背景会覆盖其他插件页面的问题
-- 音量控制、播放/删除
+- 音量控制、播放/删除；保存或恢复失败时会给出提示
 
 ### ✨ 粒子特效（21 种）
 
@@ -58,6 +58,8 @@ Launcher Theme Enhancer 是一款 SJMCL 扩展，将此前三个独立插件整�
 
 ### 🌐 语言切换
 - 设置面板中一键切换中英文
+- 自动记住上次选择，首次启动跟随系统语言
+- 首页卡片标题会随语言即时切换，无需重新加载
 - 不再需要下载不同语言版本
 
 ### 💾 状态记忆
@@ -77,6 +79,12 @@ Launcher Theme Enhancer 是一款 SJMCL 扩展，将此前三个独立插件整�
 - 鼠标静止时不生成粒子，空闲时停止 Canvas 动画循环
 - 支持独立开关和强度设置，并与主题粒子同时运行
 - 默认关闭，可在首页卡片中启用
+
+### 🚀 性能与稳定
+- 三档性能模式：自动 / 高质量 / 省电，设置页使用与主题粒子一致的选择器样式
+- 自动模式按屏幕密度限制渲染分辨率（最高 1.5x），高质量最高 2x，省电为 1x 且主题粒子限制为 30 FPS
+- 启动器窗口隐藏时自动暂停视频与动画，恢复后继续，避免后台占用
+- 背景层支持启动器 DOM 变化时的 fallback 与自动重挂载，画布尺寸变化时自动重算分辨率
 
 ### 🎛 统一卡片交互
 - 城市天气、主题增强和鼠标效果使用统一的标题图标、状态徽章与开关
@@ -99,6 +107,20 @@ Launcher Theme Enhancer 是一款 SJMCL 扩展，将此前三个独立插件整�
 1. 从 Releases 下载对应的 .sjmclx 文件
 2. 打开 SJMCL → 设置 → 扩展管理 → 导入，插件支持选择文件导入和拖动导入
 3. 启用即可
+## 开发
+
+```bash
+npm install
+npm run dev                  # 构建到启动器扩展目录，并通过 deeplink 热重载
+npm run build                # 正式包：dist/<identifier>-<version>.sjmclx
+npm run build -- --dev       # 开发包：文件名带 -dev 后缀
+npm run bump -- 2.2.0        # 同步 package.json、sjmcl.ext.json 与设置页版本
+```
+
+运行时源码位于 `src/`，按 `scripts/source-order.mjs` 的顺序拼接为单一作用域；主题粒子已按效果拆分到 `src/effects/theme/`，新增效果时创建文件并加入顺序表。当前暂不支持跨文件 `import`，后续会逐步演进为真正的独立模块。
+
+`frontend/index.js` 与 `dist/` 是构建产物，不要直接编辑；构建时会从 `sjmcl.ext.json` 注入版本号，并校验中英文语言键与类型定义是否一致。
+
 ## 兼容性
 
 - 最低启动器版本: 1.1.3

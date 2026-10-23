@@ -1,5 +1,47 @@
 ﻿# Changelog
 
+## v2.2.0 — 2026-10-23
+
+### 简体中文
+
+#### 新增
+- 设置页新增“性能模式”：自动 / 高质量 / 省电，使用与主题粒子一致的选择器与强调线样式
+- 高分屏按 DPR 上限渲染：自动最高 1.5x、高质量最高 2x、省电 1x；省电模式主题粒子限制为 30 FPS
+- 启动器窗口隐藏时自动暂停视频与动画，恢复后继续
+- 背景层支持启动器 DOM 变化的 fallback 与自动重挂载，宿主尺寸变化时通过 ResizeObserver 重算画布分辨率
+
+#### 修复
+- 语言选择持久化到 `localStorage`，重启启动器后保持上次选择；首次启动跟随系统语言
+- 首页卡片标题/描述改为按当前语言注册；切换语言时标题即时同步，描述在下次加载时更新
+- 视频超过 100MB 时先提示风险，确认后仍可使用；保存失败或恢复失败时给出提示，保存失败时清理失效的文件名
+- 设置页与 README 补充 Open-Meteo 天气数据署名，修正“200+ 城市”的表述
+
+#### 维护
+- 21 个主题粒子效果拆分为 `src/effects/theme/` 下的独立文件，构建顺序集中在 `scripts/source-order.mjs`
+- 版本号改为构建时从 `sjmcl.ext.json` 注入，设置页不再硬编码；`npm run bump` 只更新 JSON
+- 构建期校验中英文语言键与 `src/locales/types.ts` 一致，缺失或重复会直接失败
+- `frontend/index.js` 增加生成文件标识；`src/effects/theme/` 新增效果时只需创建文件并注册顺序
+
+### English
+
+#### Added
+- New "Performance Mode" in settings: Auto / High Quality / Power Saver, matching the theme particle selector and accent-line style
+- HiDPI rendering caps: Auto up to 1.5x, High Quality up to 2x, Power Saver 1x; Power Saver caps theme particles at 30 FPS
+- Video and animations pause automatically while the launcher window is hidden and resume when visible
+- Background layer falls back and re-attaches on launcher DOM changes; canvases re-measure via ResizeObserver
+
+#### Fixed
+- Language choice is persisted in `localStorage` and restored after a launcher restart; first launch follows the system language
+- Home widget titles/descriptions are registered in the current language; titles sync immediately on switch, descriptions update on next load
+- Videos over 100MB now show a warning but can still be used after confirmation; save and restore failures show a notice, and failed saves clear the stale filename
+- Added Open-Meteo attribution in settings and README; corrected the "200+ cities" wording
+
+#### Maintenance
+- Split the 21 theme particle effects into individual files under `src/effects/theme/`; build order is centralized in `scripts/source-order.mjs`
+- Version is injected from `sjmcl.ext.json` at build time; the settings page no longer hardcodes it and `npm run bump` only updates JSON
+- Build validates Chinese/English locale keys against `src/locales/types.ts` and fails on missing or duplicate keys
+- `frontend/index.js` now carries a generated-file banner; adding an effect only requires a new file plus an order entry
+
 ## v2.1.0 — 2026-10-21
 
 ### ✨ 新增

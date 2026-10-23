@@ -101,6 +101,29 @@ export interface LocaleStrings {
   layerOrder: string;
   enchantingDesc: string;
   codeDesc: string;
+  homeCityTitle: string;
+  homeCityDesc: string;
+  homeThemeTitle: string;
+  homeThemeDesc: string;
+  homeMouseTitle: string;
+  homeMouseDesc: string;
+  videoLargeTitle: string;
+  videoLargeWarning: string;
+  videoLargeSize: string;
+  videoLargeContinue: string;
+  videoLargeCancel: string;
+  videoUnsupported: string;
+  videoSaveFailed: string;
+  videoRestoreFailed: string;
+  weatherAttribution: string;
+  performanceMode: string;
+  perfModeHint: string;
+  perfAuto: string;
+  perfHigh: string;
+  perfSaver: string;
+  perfAutoDesc: string;
+  perfHighDesc: string;
+  perfSaverDesc: string;
 }
 
 export type LocaleKey = keyof LocaleStrings;
