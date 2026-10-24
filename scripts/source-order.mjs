@@ -48,6 +48,7 @@ export const SOURCE_PARTS = [
   "src/locales/en.ts",
   "src/locales/zh.ts",
   "src/locales/index.ts",
+  "src/engine/ui-theme.ts",
   "src/components/video-warning-modal.ts",
   "src/widgets/home-widget.ts",
   "src/pages/settings-page.ts",

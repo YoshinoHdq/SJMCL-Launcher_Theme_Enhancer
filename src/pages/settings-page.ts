@@ -106,6 +106,8 @@
       const vs = useVidState();
       const [locale, setLocale] = es("locale", getSavedLocale());
       const t = useLocale(host);
+      const theme = lteUseTheme(api);
+      const tone = theme.tone;
       const [city, setCity] = es("cw_city", "");
       const [wInfo, setWInfo] = es("cw_wi", null);
       const [ambientEnabled, setAmbientEnabled] = es("cw_ambient_enabled", true);
@@ -319,14 +321,14 @@
                 justifyContent: "center",
                 borderRadius: "md",
                 bg: accent + "2b",
-                color: accent,
+                color: tone(accent),
                 fontSize: "10px",
                 fontWeight: "bold",
                 border: "1px solid " + accent + "55"
               },
               initials
             ),
-            el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, title)
+            el(Text, { fontSize: "sm", fontWeight: "bold", color: "var(--lte-text-strong)" }, title)
           ),
           el(
             HStack,
@@ -348,9 +350,9 @@
             px: 3,
             py: 1.5,
             borderRadius: "full",
-            bg: active ? accent + "2b" : "rgba(255,255,255,0.035)",
-            border: "1px solid " + (active ? accent + "88" : "rgba(255,255,255,0.08)"),
-            color: active ? "white" : "gray.400",
+            bg: active ? accent + "2b" : "var(--lte-inner)",
+            border: "1px solid " + (active ? accent + "88" : "var(--lte-input-bg)"),
+            color: active ? "var(--lte-text)" : "var(--lte-text-muted)",
             fontWeight: active ? "semibold" : "normal",
             onClick: function() {
               setLocale(code);
@@ -389,7 +391,7 @@
             spacing: 3,
             p: 2,
             borderRadius: "lg",
-            bg: "rgba(255,255,255,0.035)",
+            bg: "var(--lte-inner)",
             border: "1px solid " + accent + (checked ? "48" : "1f")
           },
           el(
@@ -405,14 +407,14 @@
                 justifyContent: "center",
                 borderRadius: "md",
                 bg: accent + "25",
-                color: accent,
+                color: tone(accent),
                 fontSize: "9px",
                 fontWeight: "bold",
                 border: "1px solid " + accent + "52"
               },
               initials
             ),
-            el(Text, { fontSize: "sm", color: checked ? "gray.100" : "gray.400", fontWeight: "semibold" }, title)
+            el(Text, { fontSize: "sm", color: checked ? "var(--lte-text-strong)" : "var(--lte-text-muted)", fontWeight: "semibold" }, title)
           ),
           el(Switch, {
             isChecked: checked,
@@ -501,9 +503,11 @@
         {
           p: { base: 4, md: 6 },
           borderRadius: "2xl",
-          bg: "rgba(8,12,24,0.95)",
+          bg: "var(--lte-surface-strong)",
           backdropFilter: "blur(4px)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          border: "1px solid var(--lte-border)",
+          style: theme.style,
+          boxShadow: "var(--lte-shadow)",
           maxW: "1120px",
           w: "100%",
           mx: "auto"
@@ -517,19 +521,19 @@
             el(
               VStack,
               { spacing: 1, align: "flex-start" },
-              el(Text, { fontSize: "lg", fontWeight: "bold", color: "white" }, t("themeEnhancer")),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("themeEnhancerDesc"))
+              el(Text, { fontSize: "lg", fontWeight: "bold", color: "var(--lte-text)" }, t("themeEnhancer")),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("themeEnhancerDesc"))
             ),
             el(Badge, { colorScheme: "purple", variant: "subtle", borderRadius: "full", fontSize: "xs", px: 3 }, "v" + __LTE_VERSION__)
           ),
           // ===== Language Selector =====
           el(
             Box,
-            { p: 2.5, borderRadius: "xl", bg: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.07)" },
+            { p: 2.5, borderRadius: "xl", bg: "var(--lte-inner)", border: "1px solid var(--lte-border-soft)" },
             el(
               HStack,
               { spacing: 3, align: "center", justify: "space-between", flexWrap: "wrap" },
-              el(Text, { fontSize: "sm", color: "gray.300", fontWeight: "600" }, "Language / 语言"),
+              el(Text, { fontSize: "sm", color: "var(--lte-text-secondary)", fontWeight: "600" }, "Language / 语言"),
               el(
                 HStack,
                 { spacing: 2, flexWrap: "wrap" },
@@ -544,7 +548,7 @@
             {
               p: 3,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid " + homeWidgetAccent + "3d",
               position: "relative",
               overflow: "hidden",
@@ -560,7 +564,7 @@
                 t("homeWidgets"),
                 { color: visibleHomeWidgetCount > 0 ? "purple" : "gray", text: visibleHomeWidgetCount + " / 5" }
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("homeWidgetsHint")),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("homeWidgetsHint")),
               homeWidgetRow(
                 "#69bbd2",
                 "CW",
@@ -606,12 +610,12 @@
                   updateHomeWidgetSetting(setShowTitlebarWidget, !showTitlebarWidget);
                 }
               ),
-              visibleHomeWidgetCount === 0 ? el(Text, { fontSize: "xs", color: "orange.300" }, t("homeWidgetsAllHidden")) : null,
-              visibleHomeWidgetCount === 1 ? el(Text, { fontSize: "xs", color: "yellow.300" }, t("homeWidgetsSingleWarning")) : null,
+              visibleHomeWidgetCount === 0 ? el(Text, { fontSize: "xs", color: "var(--lte-warning)" }, t("homeWidgetsAllHidden")) : null,
+              visibleHomeWidgetCount === 1 ? el(Text, { fontSize: "xs", color: "var(--lte-caution)" }, t("homeWidgetsSingleWarning")) : null,
               el(
                 HStack,
                 { justify: "space-between", align: "center", spacing: 3, flexWrap: "wrap" },
-                homeWidgetsDirty ? el(Text, { fontSize: "xs", color: "blue.300" }, t("homeWidgetsPending")) : null,
+                homeWidgetsDirty ? el(Text, { fontSize: "xs", color: "var(--lte-info)" }, t("homeWidgetsPending")) : null,
                 el(
                   Box,
                   {
@@ -621,9 +625,9 @@
                     px: 3,
                     py: 1.5,
                     borderRadius: "lg",
-                    bg: homeWidgetsDirty ? homeWidgetAccent + "2b" : "rgba(255,255,255,0.035)",
-                    border: "1px solid " + (homeWidgetsDirty ? homeWidgetAccent + "88" : "rgba(255,255,255,0.08)"),
-                    color: homeWidgetsDirty ? "white" : "gray.500",
+                    bg: homeWidgetsDirty ? homeWidgetAccent + "2b" : "var(--lte-inner)",
+                    border: "1px solid " + (homeWidgetsDirty ? homeWidgetAccent + "88" : "var(--lte-input-bg)"),
+                    color: homeWidgetsDirty ? "var(--lte-text)" : "var(--lte-text-faint)",
                     cursor: homeWidgetsDirty ? "pointer" : "default",
                     disabled: !homeWidgetsDirty,
                     fontSize: "xs",
@@ -645,7 +649,7 @@
             {
               p: 3,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid " + weatherAccent + "38",
               position: "relative",
               overflow: "hidden",
@@ -671,7 +675,7 @@
                   "aria-label": t("dynamicAmbience")
                 })
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("ambienceHint")),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("ambienceHint")),
               el(
                 HStack,
                 { spacing: 2 },
@@ -689,8 +693,8 @@
                     minWidth: 0,
                     padding: "8px 12px",
                     borderRadius: "10px",
-                    background: "rgba(255,255,255,0.07)",
-                    color: "#e2e8f0",
+                    background: "var(--lte-input-bg)",
+                    color: "var(--lte-input-text)",
                     border: "1px solid " + weatherAccent + "55",
                     fontSize: "14px",
                     outline: "none"
@@ -710,7 +714,7 @@
                       borderRadius: "10px",
                       background: weatherAccent + "22",
                       border: "1px solid " + weatherAccent + "66",
-                      color: weatherAccent,
+                      color: tone(weatherAccent),
                       cursor: !input.trim() || loading ? "default" : "pointer",
                       opacity: !input.trim() || loading ? 0.55 : 1,
                       "--card-accent": weatherAccent,
@@ -727,19 +731,19 @@
                   align: "center",
                   p: 2.5,
                   borderRadius: "lg",
-                  bg: "rgba(255,255,255,0.035)",
+                  bg: "var(--lte-inner)",
                   border: "1px solid " + weatherAccent + (ambientEnabled ? "42" : "22"),
                   flexWrap: "wrap"
                 },
                 el(
                   VStack,
                   { spacing: 0, align: "flex-start" },
-                  el(Text, { fontSize: "xs", color: "gray.400", fontWeight: "600" }, city || ""),
+                  el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", fontWeight: "600" }, city || ""),
                   el(Text, {
                     fontSize: "2xl",
                     fontWeight: "bold",
                     lineHeight: "1.15",
-                    color: weatherAccent,
+                    color: tone(weatherAccent),
                     textShadow: ambientEnabled ? "0 0 10px " + weatherAccent + "55" : "none",
                     transition: "text-shadow 180ms ease"
                   }, wInfo.temp + "°C")
@@ -747,14 +751,14 @@
                 el(
                   HStack,
                   { spacing: 4, flexWrap: "wrap" },
-                  el(Text, { fontSize: "xs", color: "gray.400" }, "💧 " + t("humidity") + ": " + wInfo.humi + "%"),
-                  el(Text, { fontSize: "xs", color: "gray.400" }, "💨 " + t("wind") + ": " + wInfo.wind + " km/h"),
-                  wInfo.feels ? el(Text, { fontSize: "xs", color: "gray.400" }, "🌡 " + t("feels") + ": " + wInfo.feels + "°C") : null,
-                  el(Text, { fontSize: "xs", color: weatherAccent }, "☁ " + t(wmoLocaleKey2(weatherType)) + " · Code " + wInfo.code)
+                  el(Text, { fontSize: "xs", color: "var(--lte-text-muted)" }, "💧 " + t("humidity") + ": " + wInfo.humi + "%"),
+                  el(Text, { fontSize: "xs", color: "var(--lte-text-muted)" }, "💨 " + t("wind") + ": " + wInfo.wind + " km/h"),
+                  wInfo.feels ? el(Text, { fontSize: "xs", color: "var(--lte-text-muted)" }, "🌡 " + t("feels") + ": " + wInfo.feels + "°C") : null,
+                  el(Text, { fontSize: "xs", color: tone(weatherAccent) }, "☁ " + t(wmoLocaleKey2(weatherType)) + " · Code " + wInfo.code)
                 )
               ) : el(
                 Text,
-                { fontSize: "sm", color: "gray.500", py: 2 },
+                { fontSize: "sm", color: "var(--lte-text-faint)", py: 2 },
                 city ? t("loading") : t("searchCity")
               )
             )
@@ -765,7 +769,7 @@
             {
               p: 3,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid " + videoAccent + "32",
               position: "relative",
               overflow: "hidden",
@@ -790,7 +794,7 @@
                   }
                 })
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("videoLayer")),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("videoLayer")),
               vs.name ? el(
                 VStack,
                 { spacing: 2.5, align: "stretch" },
@@ -828,7 +832,7 @@
                       justifyContent: "center",
                       bg: videoAccent + "22",
                       border: "1px solid " + videoAccent + "66",
-                      color: "white",
+                      color: "var(--lte-text)",
                       fontSize: "sm",
                       cursor: vs.enabled ? "pointer" : "default",
                       opacity: vs.enabled ? 1 : 0.45
@@ -838,24 +842,24 @@
                       vs.enabled && !vs.paused ? el(
                         HStack,
                         { spacing: "3px", align: "center" },
-                        el(Box, { w: "4px", h: "14px", borderRadius: "1px", bg: "white" }),
-                        el(Box, { w: "4px", h: "14px", borderRadius: "1px", bg: "white" })
+                        el(Box, { w: "4px", h: "14px", borderRadius: "1px", bg: "var(--lte-text)" }),
+                        el(Box, { w: "4px", h: "14px", borderRadius: "1px", bg: "var(--lte-text)" })
                       ) : el(Box, {
                         w: 0,
                         h: 0,
                         ml: "2px",
                         borderTop: "7px solid transparent",
                         borderBottom: "7px solid transparent",
-                        borderLeft: "11px solid white"
+                        borderLeft: "11px solid var(--lte-text)"
                       })
                     )),
                     el(
                       VStack,
                       { spacing: 0, flex: 1, minW: 0 },
-                      el(Text, { fontSize: "sm", fontWeight: "semibold", color: "gray.100", noOfLines: 1 }, vs.name),
-                      el(Text, { fontSize: "xs", color: "gray.500" }, videoMetaText(vs.duration, vs.size))
+                      el(Text, { fontSize: "sm", fontWeight: "semibold", color: "var(--lte-text-strong)", noOfLines: 1 }, vs.name),
+                      el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, videoMetaText(vs.duration, vs.size))
                     ),
-                    el(Text, { fontSize: "xs", color: videoAccent }, vs.loop ? "↻" : "1×")
+                    el(Text, { fontSize: "xs", color: tone(videoAccent) }, vs.loop ? "↻" : "1×")
                   )
                 ),
                 el(
@@ -872,7 +876,7 @@
                     justifyContent: "center",
                     borderRadius: "md",
                     bg: "transparent",
-                    color: videoAccent,
+                    color: tone(videoAccent),
                     cursor: "pointer",
                     fontSize: "sm",
                     "aria-label": "mute"
@@ -889,7 +893,7 @@
                     className: "lte-mouse-slider lte-card-slider",
                     style: { flex: 1, "--mouse-accent": videoAccent, "--card-accent": videoAccent }
                   }),
-                  el(Text, { fontSize: "xs", color: videoAccent, minW: "34px", textAlign: "right" }, Math.round(vs.vol * 100) + "%")
+                  el(Text, { fontSize: "xs", color: tone(videoAccent), minW: "34px", textAlign: "right" }, Math.round(vs.vol * 100) + "%")
                 ),
                 el(
                   HStack,
@@ -897,7 +901,7 @@
                   el(
                     HStack,
                     { spacing: 2, align: "center" },
-                    el(Text, { fontSize: "xs", color: "gray.400" }, t("loopVideo")),
+                    el(Text, { fontSize: "xs", color: "var(--lte-text-muted)" }, t("loopVideo")),
                     el(Switch, { isChecked: vs.loop, colorScheme: "green", size: "sm", onChange: function() { videoSetLoop(!vs.loop); } })
                   ),
                   el(
@@ -923,7 +927,7 @@
                   py: 4,
                   borderRadius: "xl",
                   border: "1px dashed " + videoAccent + "66",
-                  bg: "rgba(105,227,154,0.035)",
+                  bg: "var(--lte-success-surface)",
                   textAlign: "center",
                   onClick: pickVideoFile,
                   style: {
@@ -935,8 +939,8 @@
                   VStack,
                   { spacing: 1, align: "center" },
                   el(Text, { fontSize: "lg" }, "🎞️"),
-                  el(Text, { fontSize: "sm", fontWeight: "semibold", color: "gray.200" }, t("selectVideo")),
-                  el(Text, { fontSize: "xs", color: "gray.500" }, t("videoUploadHint"))
+                  el(Text, { fontSize: "sm", fontWeight: "semibold", color: "var(--lte-text-strong)" }, t("selectVideo")),
+                  el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("videoUploadHint"))
                 )
               )
             )
@@ -947,7 +951,7 @@
             {
               p: 3,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid " + themeAccent + "42",
               position: "relative",
               overflow: "hidden",
@@ -971,7 +975,7 @@
                   "aria-label": t("themeParticles")
                 })
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("themeSwitchHint")),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("themeSwitchHint")),
               el(
                 Box,
                 {
@@ -981,10 +985,10 @@
                   w: "100%",
                   p: 2.5,
                   borderRadius: "xl",
-                  bg: "rgba(255,255,255,0.045)",
+                  bg: "var(--lte-inner-strong)",
                   border: "1px solid " + themeAccent + "66",
                   textAlign: "left",
-                  color: "white",
+                  color: "var(--lte-text)",
                   onClick: function() {
                     setThemeOpen(!themeOpen);
                     if (!themeOpen) lteFocusSelectedOption(".lte-settings-theme-options");
@@ -999,7 +1003,7 @@
                   HStack,
                   { justify: "space-between", align: "center" },
                   el(Text, { fontSize: "sm", fontWeight: "semibold" }, t(fxLocaleKey2(tType))),
-                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (themeOpen ? "is-open" : ""), fontSize: "sm", color: "gray.400" }, "⌄")
+                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (themeOpen ? "is-open" : ""), fontSize: "sm", color: "var(--lte-text-muted)" }, "⌄")
                 )
               ),
               themeOpen ? el(
@@ -1012,7 +1016,7 @@
                     el(Text, {
                       fontSize: "10px",
                       fontWeight: "semibold",
-                      color: themeAccent,
+                      color: tone(themeAccent),
                       opacity: 0.72,
                       px: 1,
                       pt: 1.5,
@@ -1036,7 +1040,7 @@
                             borderRadius: "lg",
                             border: "1px solid " + (active ? option.colors[1] + "88" : "transparent"),
                             bg: active ? option.colors[1] + "18" : "transparent",
-                            color: active ? "white" : "gray.300",
+                            color: active ? "var(--lte-text)" : "var(--lte-text-secondary)",
                             textAlign: "left",
                             onClick: function() {
                               changeThemeType(option.v);
@@ -1047,7 +1051,7 @@
                             HStack,
                             { justify: "space-between", align: "center" },
                             el(Text, { fontSize: "sm" }, t(fxLocaleKey2(option.v))),
-                            active ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                            active ? el(Text, { fontSize: "sm", color: tone(option.colors[1]) }, "✓") : null
                           )
                         );
                       })
@@ -1058,7 +1062,7 @@
               el(
                 HStack,
                 { spacing: 2, align: "center" },
-                el(Text, { fontSize: "xs", color: "gray.400", minW: "44px" }, t("intensity")),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", minW: "44px" }, t("intensity")),
                 el("input", {
                   type: "range",
                   min: 10,
@@ -1071,7 +1075,7 @@
                   className: "lte-mouse-slider lte-card-slider",
                   style: { flex: 1, "--mouse-accent": themeAccent, "--card-accent": themeAccent }
                 }),
-                el(Text, { fontSize: "xs", color: themeAccent, minW: "34px", textAlign: "right" }, tInt + "%")
+                el(Text, { fontSize: "xs", color: tone(themeAccent), minW: "34px", textAlign: "right" }, tInt + "%")
               )
             )
           ),
@@ -1082,7 +1086,7 @@
             {
               p: 3,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid " + clickAccent + "42",
               position: "relative",
               overflow: "hidden",
@@ -1105,7 +1109,7 @@
                   "aria-label": t("clickEffects")
                 })
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t(selectedClick.descriptionKey)),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t(selectedClick.descriptionKey)),
               el(
                 Box,
                 {
@@ -1115,10 +1119,10 @@
                   w: "100%",
                   p: 2.5,
                   borderRadius: "xl",
-                  bg: "rgba(255,255,255,0.045)",
+                  bg: "var(--lte-inner-strong)",
                   border: "1px solid " + clickAccent + "66",
                   textAlign: "left",
-                  color: "white",
+                  color: "var(--lte-text)",
                   onClick: function() {
                     setClickOpen(!clickOpen);
                     if (!clickOpen) lteFocusSelectedOption(".lte-settings-click-options");
@@ -1138,7 +1142,7 @@
                     el(Text, { fontSize: "md", w: "24px", textAlign: "center" }, selectedClick.icon),
                     el(Text, { fontSize: "sm", fontWeight: "semibold" }, t(selectedClick.labelKey))
                   ),
-                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (clickOpen ? "is-open" : ""), fontSize: "sm", color: "gray.400" }, "⌄")
+                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (clickOpen ? "is-open" : ""), fontSize: "sm", color: "var(--lte-text-muted)" }, "⌄")
                 )
               ),
               clickOpen ? el(
@@ -1159,7 +1163,7 @@
                       borderRadius: "lg",
                       border: "1px solid " + (active ? option.colors[1] + "88" : "transparent"),
                       bg: active ? option.colors[1] + "18" : "transparent",
-                      color: active ? "white" : "gray.300",
+                      color: active ? "var(--lte-text)" : "var(--lte-text-secondary)",
                       textAlign: "left",
                       onClick: function() {
                         changeClickType(option.id);
@@ -1174,7 +1178,7 @@
                         el(Text, { w: "22px", textAlign: "center" }, option.icon),
                         el(Text, { fontSize: "sm" }, t(option.labelKey))
                       ),
-                      active ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                      active ? el(Text, { fontSize: "sm", color: tone(option.colors[1]) }, "✓") : null
                     )
                   );
                 })
@@ -1182,7 +1186,7 @@
               el(
                 HStack,
                 { spacing: 2, align: "center" },
-                el(Text, { fontSize: "xs", color: "gray.400", minW: "44px" }, t("intensity")),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", minW: "44px" }, t("intensity")),
                 el("input", {
                   type: "range",
                   min: 10,
@@ -1195,7 +1199,7 @@
                   className: "lte-mouse-slider lte-card-slider",
                   style: { flex: 1, "--mouse-accent": clickAccent, "--card-accent": clickAccent }
                 }),
-                el(Text, { fontSize: "xs", color: clickAccent, minW: "34px", textAlign: "right" }, clickInt + "%")
+                el(Text, { fontSize: "xs", color: tone(clickAccent), minW: "34px", textAlign: "right" }, clickInt + "%")
               )
             )
           ),
@@ -1206,7 +1210,7 @@
             {
               p: 3,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid #8aa8ff42",
               position: "relative",
               overflow: "hidden",
@@ -1231,14 +1235,14 @@
                   }
                 })
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("titlebarDesc")),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("titlebarHint")),
-              !titlebarState.supported ? el(Text, { fontSize: "xs", color: "orange.300" }, t("titlebarUnsupportedHint")) : null,
-              titlebarState.conflict ? el(Text, { fontSize: "xs", color: "orange.300" }, t("titlebarConflictHint")) : null,
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("titlebarDesc")),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("titlebarHint")),
+              !titlebarState.supported ? el(Text, { fontSize: "xs", color: "var(--lte-warning)" }, t("titlebarUnsupportedHint")) : null,
+              titlebarState.conflict ? el(Text, { fontSize: "xs", color: "var(--lte-warning)" }, t("titlebarConflictHint")) : null,
               el(
                 HStack,
                 { spacing: 2, align: "center" },
-                el(Text, { fontSize: "xs", color: "gray.400", minW: "64px" }, t("titlebarZone")),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", minW: "64px" }, t("titlebarZone")),
                 el("input", {
                   type: "range",
                   min: 8,
@@ -1252,12 +1256,12 @@
                   className: "lte-mouse-slider lte-card-slider",
                   style: { flex: 1, "--mouse-accent": "#8aa8ff", "--card-accent": "#8aa8ff" }
                 }),
-                el(Text, { fontSize: "xs", color: "#8aa8ff", minW: "42px", textAlign: "right" }, titlebarState.zone + " px")
+                el(Text, { fontSize: "xs", color: tone("#8aa8ff"), minW: "42px", textAlign: "right" }, titlebarState.zone + " px")
               ),
               el(
                 HStack,
                 { spacing: 2, align: "center" },
-                el(Text, { fontSize: "xs", color: "gray.400", minW: "64px" }, t("titlebarDelay")),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", minW: "64px" }, t("titlebarDelay")),
                 el("input", {
                   type: "range",
                   min: 80,
@@ -1271,7 +1275,7 @@
                   className: "lte-mouse-slider lte-card-slider",
                   style: { flex: 1, "--mouse-accent": "#8aa8ff", "--card-accent": "#8aa8ff" }
                 }),
-                el(Text, { fontSize: "xs", color: "#8aa8ff", minW: "52px", textAlign: "right" }, titlebarState.delay + " ms")
+                el(Text, { fontSize: "xs", color: tone("#8aa8ff"), minW: "52px", textAlign: "right" }, titlebarState.delay + " ms")
               )
             )
           ),
@@ -1282,7 +1286,7 @@
             {
               p: 3,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid #8aa8ff42",
               position: "relative",
               overflow: "hidden",
@@ -1307,7 +1311,7 @@
                   }
                 })
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("reduceMotionDesc"))
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("reduceMotionDesc"))
             )
           ),
           // ===== Section: Performance =====
@@ -1316,7 +1320,7 @@
             {
               p: 3,
               borderRadius: "lg",
-              bg: "rgba(255,255,255,0.035)",
+              bg: "var(--lte-inner)",
               border: "1px solid " + themeAccent + "42",
               position: "relative",
               overflow: "hidden",
@@ -1333,7 +1337,7 @@
                 { color: "blue", text: t(perfOption.labelKey) },
                 null
               ),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("perfModeHint")),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("perfModeHint")),
               el(
                 Box,
                 {
@@ -1343,10 +1347,10 @@
                   w: "100%",
                   p: 2.5,
                   borderRadius: "xl",
-                  bg: "rgba(255,255,255,0.045)",
+                  bg: "var(--lte-inner-strong)",
                   border: "1px solid " + themeAccent + "66",
                   textAlign: "left",
-                  color: "white",
+                  color: "var(--lte-text)",
                   onClick: function() {
                     setPerfOpen(!perfOpen);
                   },
@@ -1360,7 +1364,7 @@
                   HStack,
                   { justify: "space-between", align: "center" },
                   el(Text, { fontSize: "sm", fontWeight: "semibold" }, t(perfOption.labelKey)),
-                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (perfOpen ? "is-open" : ""), fontSize: "sm", color: "gray.400" }, "⌄")
+                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (perfOpen ? "is-open" : ""), fontSize: "sm", color: "var(--lte-text-muted)" }, "⌄")
                 )
               ),
               perfOpen ? el(
@@ -1380,7 +1384,7 @@
                       borderRadius: "lg",
                       border: "1px solid " + (active ? option.colors[1] + "88" : "transparent"),
                       bg: active ? option.colors[1] + "18" : "transparent",
-                      color: active ? "white" : "gray.300",
+                      color: active ? "var(--lte-text)" : "var(--lte-text-secondary)",
                       textAlign: "left",
                       onClick: function() {
                         changePerfMode(option.id);
@@ -1390,11 +1394,11 @@
                       HStack,
                       { justify: "space-between", align: "center", mb: 1 },
                       el(Text, { fontSize: "sm" }, t(option.labelKey)),
-                      active ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                      active ? el(Text, { fontSize: "sm", color: tone(option.colors[1]) }, "✓") : null
                     ),
                     el(
                       Text,
-                      { fontSize: "xs", color: "gray.500", lineHeight: 1.5 },
+                      { fontSize: "xs", color: "var(--lte-text-faint)", lineHeight: 1.5 },
                       t(option.descriptionKey)
                     )
                   );
@@ -1405,14 +1409,14 @@
           // ===== Section: Help =====
           el(
             Box,
-            { p: 3, borderRadius: "lg", bg: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" },
+            { p: 3, borderRadius: "lg", bg: "var(--lte-inner-faint)", border: "1px solid var(--lte-border-faint)" },
             el(
               VStack,
               { spacing: 1, align: "stretch" },
               el(
                 HStack,
                 { spacing: 2, align: "center", flexWrap: "wrap" },
-                el(Text, { fontSize: "xs", color: "gray.500" }, t("version") + " " + __LTE_VERSION__),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("version") + " " + __LTE_VERSION__),
                 el(Button, {
                   size: "xs",
                   variant: "outline",
@@ -1421,15 +1425,15 @@
                   onClick: checkUpdates
                 }, t("checkUpdates"))
               ),
-              updateStatus === "checking" ? el(Text, { fontSize: "xs", color: "gray.400" }, t("updateChecking")) : null,
-              updateStatus === "latest" ? el(Text, { fontSize: "xs", color: "green.300" }, t("updateLatest")) : null,
+              updateStatus === "checking" ? el(Text, { fontSize: "xs", color: "var(--lte-text-muted)" }, t("updateChecking")) : null,
+              updateStatus === "latest" ? el(Text, { fontSize: "xs", color: "var(--lte-success)" }, t("updateLatest")) : null,
               updateStatus === "available" ? el(
                 VStack,
                 { spacing: 1, align: "stretch" },
                 el(
                   HStack,
                   { spacing: 2, align: "center", flexWrap: "wrap" },
-                  el(Text, { fontSize: "xs", color: "yellow.300" }, t("updateAvailable") + " v" + (latestUpdate ? latestUpdate.version : "")),
+                  el(Text, { fontSize: "xs", color: "var(--lte-caution)" }, t("updateAvailable") + " v" + (latestUpdate ? latestUpdate.version : "")),
                   el(Button, { size: "xs", colorScheme: "blue", borderRadius: "md", onClick: installUpdate }, t("updateInstall")),
                   latestUpdate && latestUpdate.page ? el(Button, {
                   size: "xs",
@@ -1442,20 +1446,20 @@
                   }
                 }, t("openReleasePage")) : null
                 ),
-                latestUpdate && latestUpdate.notes ? el(Text, { fontSize: "xs", color: "gray.500", noOfLines: 2 }, latestUpdate.notes) : null
+                latestUpdate && latestUpdate.notes ? el(Text, { fontSize: "xs", color: "var(--lte-text-faint)", noOfLines: 2 }, latestUpdate.notes) : null
               ) : null,
-              updateStatus === "installing" ? el(Text, { fontSize: "xs", color: "blue.300" }, t("updateInstalling")) : null,
-              updateStatus === "submitted" ? el(Text, { fontSize: "xs", color: "green.300" }, t("updateSubmitted")) : null,
-              updateStatus === "error" ? el(Text, { fontSize: "xs", color: "orange.300" }, t("updateFailed") + ": " + updateError) : null,
-              lastUpdateCheck > 0 ? el(Text, { fontSize: "10px", color: "gray.500" }, t("lastChecked") + " " + new Date(lastUpdateCheck).toLocaleTimeString()) : null,
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("author") + ": hemekewayoshino"),
-              el(Box, { h: "1px", bg: "rgba(255,255,255,0.06)", my: 1 }),
-              el(Text, { fontSize: "xs", color: "gray.500" }, t("layerOrder")),
+              updateStatus === "installing" ? el(Text, { fontSize: "xs", color: "var(--lte-info)" }, t("updateInstalling")) : null,
+              updateStatus === "submitted" ? el(Text, { fontSize: "xs", color: "var(--lte-success)" }, t("updateSubmitted")) : null,
+              updateStatus === "error" ? el(Text, { fontSize: "xs", color: "var(--lte-warning)" }, t("updateFailed") + ": " + updateError) : null,
+              lastUpdateCheck > 0 ? el(Text, { fontSize: "10px", color: "var(--lte-text-faint)" }, t("lastChecked") + " " + new Date(lastUpdateCheck).toLocaleTimeString()) : null,
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("author") + ": hemekewayoshino"),
+              el(Box, { h: "1px", bg: "var(--lte-divider)", my: 1 }),
+              el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("layerOrder")),
               el(
                 Text,
                 {
                   fontSize: "xs",
-                  color: "blue.300",
+                  color: "var(--lte-info)",
                   cursor: "pointer",
                   onClick: function() {
                     if (host.actions && typeof host.actions.openExternalLink === "function") {

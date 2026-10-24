@@ -1290,7 +1290,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         transition: transform 100ms ease, background-color 160ms ease, border-color 180ms ease, box-shadow 180ms ease;
       }
       .lte-mouse-selector:hover {
-        background: rgba(255,255,255,0.075) !important;
+        background: var(--lte-hover, rgba(255,255,255,0.075)) !important;
         box-shadow: 0 0 16px rgba(92,180,255,0.12);
       }
       .lte-mouse-selector:active {
@@ -1309,7 +1309,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         transition: background-color 150ms ease, border-color 170ms ease, transform 100ms ease;
       }
       .lte-mouse-option:hover {
-        background: rgba(255,255,255,0.065) !important;
+        background: var(--lte-hover-soft, rgba(255,255,255,0.065)) !important;
       }
       .lte-mouse-option:active {
         transform: scale(0.993);
@@ -1319,7 +1319,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         -webkit-appearance: none;
         height: 5px;
         border-radius: 999px;
-        background: linear-gradient(90deg, var(--mouse-accent, #52e2ff), rgba(255,255,255,0.16));
+        background: linear-gradient(90deg, var(--mouse-accent, #52e2ff), var(--lte-track, rgba(255,255,255,0.16)));
         outline: none;
       }
       .lte-mouse-slider::-webkit-slider-thumb {
@@ -1328,7 +1328,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         width: 17px;
         height: 17px;
         border-radius: 50%;
-        background: #ffffff;
+        background: var(--lte-thumb, #ffffff);
         border: 1px solid var(--mouse-accent, #52e2ff);
         box-shadow: 0 0 8px var(--mouse-accent, #52e2ff);
         transition: transform 120ms ease, box-shadow 160ms ease;
@@ -1343,7 +1343,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         width: 17px;
         height: 17px;
         border-radius: 50%;
-        background: #ffffff;
+        background: var(--lte-thumb, #ffffff);
         border: 1px solid var(--mouse-accent, #52e2ff);
         box-shadow: 0 0 8px var(--mouse-accent, #52e2ff);
       }
@@ -1394,7 +1394,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         transition: transform 100ms ease, background-color 160ms ease, border-color 180ms ease, box-shadow 180ms ease;
       }
       .lte-card-selector:hover {
-        background: rgba(255,255,255,0.075) !important;
+        background: var(--lte-hover, rgba(255,255,255,0.075)) !important;
         box-shadow: 0 0 16px var(--card-glow, rgba(92,180,255,0.12));
       }
       .lte-card-selector:active {
@@ -1412,13 +1412,13 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         padding-right: 3px;
         animation: lte-mouse-options-in 210ms cubic-bezier(0.2, 0.8, 0.2, 1);
         scrollbar-width: thin;
-        scrollbar-color: var(--card-accent, #52e2ff) rgba(255,255,255,0.06);
+        scrollbar-color: var(--card-accent, #52e2ff) var(--lte-scroll-track-soft, rgba(255,255,255,0.06));
       }
       .lte-card-options::-webkit-scrollbar {
         width: 6px;
       }
       .lte-card-options::-webkit-scrollbar-track {
-        background: rgba(255,255,255,0.035);
+        background: var(--lte-scroll-track, rgba(255,255,255,0.035));
         border-radius: 999px;
       }
       .lte-card-options::-webkit-scrollbar-thumb {
@@ -1439,7 +1439,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
       }
       .lte-video-strip {
         background-image:
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 18px),
+          repeating-linear-gradient(90deg, var(--lte-stripe, rgba(255,255,255,0.05)) 0 2px, transparent 2px 18px),
           linear-gradient(90deg, transparent, var(--card-accent, #69e39a), transparent);
         background-size: 120px 100%, 220% 100%;
         background-repeat: repeat, no-repeat;
@@ -1457,7 +1457,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         transition: background-color 150ms ease, border-color 170ms ease, transform 100ms ease;
       }
       .lte-card-option:hover {
-        background: rgba(255,255,255,0.065) !important;
+        background: var(--lte-hover-soft, rgba(255,255,255,0.065)) !important;
       }
       .lte-card-option:active {
         transform: scale(0.993);
@@ -1467,7 +1467,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         -webkit-appearance: none;
         height: 5px;
         border-radius: 999px;
-        background: linear-gradient(90deg, var(--card-accent, #52e2ff), rgba(255,255,255,0.16));
+        background: linear-gradient(90deg, var(--card-accent, #52e2ff), var(--lte-track, rgba(255,255,255,0.16)));
         outline: none;
       }
       .lte-card-slider::-webkit-slider-thumb {
@@ -1476,7 +1476,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         width: 17px;
         height: 17px;
         border-radius: 50%;
-        background: #ffffff;
+        background: var(--lte-thumb, #ffffff);
         border: 1px solid var(--card-accent, #52e2ff);
         box-shadow: 0 0 8px var(--card-accent, #52e2ff);
         transition: transform 120ms ease, box-shadow 160ms ease;
@@ -1491,7 +1491,7 @@ var CURSOR_CANVAS_ID = "lte-cursor-effects";
         width: 17px;
         height: 17px;
         border-radius: 50%;
-        background: #ffffff;
+        background: var(--lte-thumb, #ffffff);
         border: 1px solid var(--card-accent, #52e2ff);
         box-shadow: 0 0 8px var(--card-accent, #52e2ff);
       }

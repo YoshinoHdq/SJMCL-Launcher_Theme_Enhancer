@@ -6,10 +6,11 @@
     return function VideoSizeWarningModal(props) {
       const host = api.getHostContext();
       const t = useLocale(host);
+      const theme = lteUseTheme(api);
       const file = _pendingVideo;
       return el(
         VStack,
-        { align: "stretch", spacing: 4 },
+        { align: "stretch", spacing: 4, style: theme.style },
         el(
           HStack,
           { spacing: 2, align: "center" },
@@ -22,12 +23,12 @@
           {
             p: 2,
             borderRadius: "md",
-            bg: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)"
+            bg: "var(--lte-inner)",
+            border: "1px solid var(--lte-border)"
           },
           el(
             Text,
-            { fontSize: "xs", color: "gray.400" },
+            { fontSize: "xs", color: "var(--lte-text-muted)" },
             t("videoLargeSize") + ": " + formatVideoSize(file ? file.size : 0)
           )
         ),

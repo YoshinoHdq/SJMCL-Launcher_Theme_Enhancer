@@ -116,6 +116,8 @@
       const [input, setInput] = useState("");
       const [loading, setLoading] = useState(false);
       const t = useLocale(host);
+      const theme = lteUseTheme(api);
+      const tone = theme.tone;
       useEffect(function() {
         if (!document.getElementById("lte-wx-keys")) {
           var s = document.createElement("style");
@@ -146,7 +148,7 @@
       const accent = palette[1];
       const lineGradient = "linear-gradient(90deg, " + palette[0] + ", " + palette[1] + ", " + palette[2] + ", " + palette[0] + ")";
       const previousLine = useCrossfadeGradient(React, lineGradient);
-      const tColor = wInfo ? tempColor(wInfo.temp) : "white";
+      const tColor = wInfo ? tone(tempColor(wInfo.temp)) : "var(--lte-text)";
       const anim = wInfo ? weaAnim(weaType) : "none";
       const active = Boolean(wInfo && ambientEnabled);
       return el(
@@ -154,9 +156,11 @@
         {
           p: 3,
           borderRadius: "xl",
-          bg: "rgba(8,12,24,0.92)",
+          bg: "var(--lte-surface)",
           backdropFilter: "blur(4px)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          border: "1px solid var(--lte-border)",
+          style: theme.style,
+          boxShadow: "var(--lte-shadow)",
           position: "relative",
           overflow: "hidden"
         },
@@ -187,7 +191,7 @@
           bottom: 0,
           style: {
             background: grad,
-            opacity: ambientEnabled ? 0.8 : 0.16,
+            opacity: ambientEnabled ? (theme.isDark ? 0.8 : 0.22) : (theme.isDark ? 0.16 : 0.08),
             filter: ambientEnabled ? "saturate(1)" : "saturate(0.35)",
             transition: "opacity 220ms ease, filter 220ms ease"
           }
@@ -211,7 +215,7 @@
                   justifyContent: "center",
                   borderRadius: "md",
                   bg: accent + "33",
-                  color: accent,
+                  color: tone(accent),
                   fontSize: "xs",
                   fontWeight: "bold",
                   border: "1px solid " + accent + "66",
@@ -219,7 +223,7 @@
                 },
                 "CW"
               ),
-              el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, t("cityWeather"))
+              el(Text, { fontSize: "sm", fontWeight: "bold", color: "var(--lte-text-strong)" }, t("cityWeather"))
             ),
             el(
               HStack,
@@ -237,7 +241,7 @@
               })
             )
           ),
-          el(Text, { fontSize: "xs", color: "gray.500" }, t("ambienceHint")),
+          el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("ambienceHint")),
           el(
             HStack,
             { spacing: 2 },
@@ -254,8 +258,8 @@
                 flex: 1,
                 padding: "6px 10px",
                 borderRadius: "10px",
-                background: "rgba(255,255,255,0.08)",
-                color: "#e2e8f0",
+                background: "var(--lte-input-bg)",
+                color: "var(--lte-input-text)",
                 border: "1px solid " + accent + "55",
                 fontSize: "13px",
                 outline: "none",
@@ -277,7 +281,7 @@
                   borderRadius: "10px",
                   background: accent + "22",
                   border: "1px solid " + accent + "66",
-                  color: accent,
+                  color: tone(accent),
                   cursor: !input.trim() || loading ? "default" : "pointer",
                   opacity: !input.trim() || loading ? 0.55 : 1,
                   "--card-accent": accent,
@@ -296,54 +300,54 @@
                 border: "1px solid " + accent + (ambientEnabled ? "48" : "24"),
                 transition: "border-color 220ms ease, background-color 220ms ease"
               },
-              bg: "rgba(255,255,255,0.04)"
+              bg: "var(--lte-inner)"
             },
             el(
               VStack,
               { spacing: 2, align: "center" },
-              el(Text, { fontSize: "11px", color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "1px", fontWeight: "medium" }, city || ""),
+              el(Text, { fontSize: "11px", color: "var(--lte-text-soft)", textTransform: "uppercase", letterSpacing: "1px", fontWeight: "medium" }, city || ""),
               el(
                 HStack,
                 { spacing: 1, align: "center" },
                 el("span", { style: { fontSize: "40px", fontWeight: "300", color: tColor, lineHeight: "1", transition: "color 220ms ease, textShadow 220ms ease", textShadow: ambientEnabled ? "0 0 8px " + accent + "60, 0 0 16px " + accent + "30" : "none" } }, wInfo.temp + "°"),
-                el(Text, { fontSize: "14px", color: "rgba(255,255,255,0.5)", mt: "6px" }, "C")
+                el(Text, { fontSize: "14px", color: "var(--lte-text-soft)", mt: "6px" }, "C")
               ),
               el(
                 HStack,
                 { spacing: 1, align: "center" },
                 el(Text, { fontSize: "24px", style: { animation: ambientEnabled ? anim : "none", display: "inline-block", opacity: ambientEnabled ? 1 : 0.7, transition: "opacity 220ms ease" } }, weatherIcon),
-                el(Text, { fontSize: "13px", color: "rgba(255,255,255,0.7)", fontWeight: "500" }, t(wmoLocaleKey(weaType)))
+                el(Text, { fontSize: "13px", color: "var(--lte-text-medium)", fontWeight: "500" }, t(wmoLocaleKey(weaType)))
               ),
-              el(Box, { h: "1px", bg: "rgba(255,255,255,0.06)", w: "100%" }),
+              el(Box, { h: "1px", bg: "var(--lte-divider)", w: "100%" }),
               el(
                 HStack,
                 { spacing: 4, justify: "center" },
                 el(
                   VStack,
                   { spacing: 0, align: "center" },
-                  el(Text, { fontSize: "10px", color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }, t("humidity")),
-                  el(Text, { fontSize: "14px", color: "white", fontWeight: "600" }, wInfo.humi + "%")
+                  el(Text, { fontSize: "10px", color: "var(--lte-text-faint)", textTransform: "uppercase" }, t("humidity")),
+                  el(Text, { fontSize: "14px", color: "var(--lte-text)", fontWeight: "600" }, wInfo.humi + "%")
                 ),
                 el(
                   VStack,
                   { spacing: 0, align: "center" },
-                  el(Text, { fontSize: "10px", color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }, t("wind")),
-                  el(Text, { fontSize: "14px", color: "white", fontWeight: "600" }, wInfo.wind + " km/h")
+                  el(Text, { fontSize: "10px", color: "var(--lte-text-faint)", textTransform: "uppercase" }, t("wind")),
+                  el(Text, { fontSize: "14px", color: "var(--lte-text)", fontWeight: "600" }, wInfo.wind + " km/h")
                 ),
                 wInfo.feels ? el(
                   VStack,
                   { spacing: 0, align: "center" },
-                  el(Text, { fontSize: "10px", color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }, t("feels")),
-                  el(Text, { fontSize: "14px", color: "white", fontWeight: "600" }, wInfo.feels + "°")
+                  el(Text, { fontSize: "10px", color: "var(--lte-text-faint)", textTransform: "uppercase" }, t("feels")),
+                  el(Text, { fontSize: "14px", color: "var(--lte-text)", fontWeight: "600" }, wInfo.feels + "°")
                 ) : null
               )
             )
           ) : el(
             Box,
-            { p: 3, borderRadius: "xl", bg: "rgba(255,255,255,0.04)", textAlign: "center" },
+            { p: 3, borderRadius: "xl", bg: "var(--lte-inner)", textAlign: "center" },
             el(
               Text,
-              { fontSize: "sm", color: "rgba(255,255,255,0.4)" },
+              { fontSize: "sm", color: "var(--lte-text-faint)" },
               city ? el("span", null, t("loading")) : el("span", null, t("searchCity"))
             )
           )
@@ -394,6 +398,8 @@
       const es = host.state.useExtensionState;
       const vs = useVidState();
       const t = useLocale(host);
+      const theme = lteUseTheme(api);
+      const tone = theme.tone;
       var _tt2 = window._tt || "rain";
       var _ti2 = window._ti || 50;
       const [selType, setSelType] = useState(_tt2);
@@ -483,9 +489,11 @@
         {
           p: 3,
           borderRadius: "xl",
-          bg: "rgba(8,12,24,0.92)",
+          bg: "var(--lte-surface)",
           backdropFilter: "blur(4px)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          border: "1px solid var(--lte-border)",
+          style: theme.style,
+          boxShadow: "var(--lte-shadow)",
           position: "relative",
           overflow: "hidden"
         },
@@ -526,7 +534,7 @@
                   justifyContent: "center",
                   borderRadius: "md",
                   bg: accent + "33",
-                  color: accent,
+                  color: tone(accent),
                   fontSize: "xs",
                   fontWeight: "bold",
                   border: "1px solid " + accent + "66",
@@ -534,7 +542,7 @@
                 },
                 "TE"
               ),
-              el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, t("themeEnhancer"))
+              el(Text, { fontSize: "sm", fontWeight: "bold", color: "var(--lte-text-strong)" }, t("themeEnhancer"))
             ),
             el(
               HStack,
@@ -555,7 +563,7 @@
             {
               p: 2,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.045)",
+              bg: "var(--lte-inner-strong)",
               border: "1px solid " + accent + "52",
               style: { "--card-accent": accent, "--card-glow": accent + "2e" }
             },
@@ -565,7 +573,7 @@
               el(
                 HStack,
                 { justify: "space-between", align: "center" },
-                el(Text, { fontSize: "xs", color: "gray.300", fontWeight: "600" }, t("themeParticles")),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-secondary)", fontWeight: "600" }, t("themeParticles")),
                 el(Badge, { colorScheme: running ? "green" : "gray", variant: "subtle", fontSize: "xs", borderRadius: "full", px: 2 }, running ? t("running") : t("stopped"))
               ),
               el(
@@ -577,10 +585,10 @@
                   w: "100%",
                   p: 2,
                   borderRadius: "xl",
-                  bg: "rgba(255,255,255,0.045)",
+                  bg: "var(--lte-inner-strong)",
                   border: "1px solid " + accent + "66",
                   textAlign: "left",
-                  color: "white",
+                  color: "var(--lte-text)",
                   onClick: function() {
                     setIsOpen(!isOpen);
                     if (!isOpen) lteFocusSelectedOption(".lte-home-theme-options");
@@ -591,7 +599,7 @@
                   HStack,
                   { justify: "space-between", align: "center" },
                   el(Text, { fontSize: "sm", fontWeight: "semibold" }, t(fxLocaleKey(selType))),
-                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (isOpen ? "is-open" : ""), fontSize: "sm", color: "gray.400" }, "⌄")
+                  el(Text, { className: "lte-mouse-chevron lte-card-chevron " + (isOpen ? "is-open" : ""), fontSize: "sm", color: "var(--lte-text-muted)" }, "⌄")
                 )
               ),
               isOpen ? el(
@@ -604,7 +612,7 @@
                     el(Text, {
                       fontSize: "10px",
                       fontWeight: "semibold",
-                      color: accent,
+                      color: tone(accent),
                       opacity: 0.72,
                       px: 1,
                       pt: 1.5,
@@ -628,7 +636,7 @@
                             borderRadius: "lg",
                             border: "1px solid " + (optionActive ? option.colors[1] + "88" : "transparent"),
                             bg: optionActive ? option.colors[1] + "18" : "transparent",
-                            color: optionActive ? "white" : "gray.300",
+                            color: optionActive ? "var(--lte-text)" : "var(--lte-text-secondary)",
                             textAlign: "left",
                             onClick: function() {
                               chooseEffect(option.v);
@@ -638,7 +646,7 @@
                             HStack,
                             { justify: "space-between", align: "center" },
                             el(Text, { fontSize: "sm" }, t(fxLocaleKey(option.v))),
-                            optionActive ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                            optionActive ? el(Text, { fontSize: "sm", color: tone(option.colors[1]) }, "✓") : null
                           )
                         );
                       })
@@ -649,7 +657,7 @@
               el(
                 HStack,
                 { spacing: 2, align: "center" },
-                el(Text, { fontSize: "xs", color: "gray.400", minW: "44px" }, t("intensity")),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", minW: "44px" }, t("intensity")),
                 el("input", {
                   type: "range",
                   min: 10,
@@ -662,21 +670,21 @@
                   className: "lte-mouse-slider lte-card-slider",
                   style: { flex: 1, "--mouse-accent": accent, "--card-accent": accent }
                 }),
-                el(Text, { fontSize: "xs", color: accent, minW: "34px", textAlign: "right" }, selInt + "%")
+                el(Text, { fontSize: "xs", color: tone(accent), minW: "34px", textAlign: "right" }, selInt + "%")
               )
             )
           ),
-          el(Text, { fontSize: "xs", color: "gray.500" }, t("themeSwitchHint")),
+          el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("themeSwitchHint")),
           el(
             Box,
-            { p: 2.5, borderRadius: "lg", bg: "rgba(255,255,255,0.035)", border: "1px solid " + accent + "2e", style: { "--card-accent": accent } },
+            { p: 2.5, borderRadius: "lg", bg: "var(--lte-inner)", border: "1px solid " + accent + "2e", style: { "--card-accent": accent } },
             el(
               VStack,
               { spacing: 2, align: "stretch" },
               el(
                 HStack,
                 { justify: "space-between", align: "center" },
-                el(Text, { fontSize: "xs", color: "gray.300", fontWeight: "600" }, t("videoBackground")),
+                el(Text, { fontSize: "xs", color: "var(--lte-text-secondary)", fontWeight: "600" }, t("videoBackground")),
                 el(
                   HStack,
                   { spacing: 1.5, align: "center" },
@@ -707,13 +715,13 @@
                   py: 3,
                   borderRadius: "md",
                   border: "1px dashed " + accent + "66",
-                  bg: "rgba(255,255,255,0.025)",
+                  bg: "var(--lte-inner-faint)",
                   textAlign: "center",
                   onClick: pickVideoFile,
                   className: "lte-mouse-selector"
                 },
-                el(Text, { fontSize: "sm", color: "gray.200" }, "🎞️ " + t("selectVideo")),
-                el(Text, { fontSize: "10px", color: "gray.500" }, "MP4 / WebM")
+                el(Text, { fontSize: "sm", color: "var(--lte-text-strong)" }, "🎞️ " + t("selectVideo")),
+                el(Text, { fontSize: "10px", color: "var(--lte-text-faint)" }, "MP4 / WebM")
               ) : el(
                 VStack,
                 { spacing: 2, align: "stretch" },
@@ -751,7 +759,7 @@
                       justifyContent: "center",
                       bg: accent + "22",
                       border: "1px solid " + accent + "66",
-                      color: "white",
+                      color: "var(--lte-text)",
                       fontSize: "xs",
                       cursor: vs.enabled ? "pointer" : "default",
                       opacity: vs.enabled ? 1 : 0.45
@@ -761,24 +769,24 @@
                       vs.enabled && !vs.paused ? el(
                         HStack,
                         { spacing: "3px", align: "center" },
-                        el(Box, { w: "3px", h: "11px", borderRadius: "1px", bg: "white" }),
-                        el(Box, { w: "3px", h: "11px", borderRadius: "1px", bg: "white" })
+                        el(Box, { w: "3px", h: "11px", borderRadius: "1px", bg: "var(--lte-text)" }),
+                        el(Box, { w: "3px", h: "11px", borderRadius: "1px", bg: "var(--lte-text)" })
                       ) : el(Box, {
                         w: 0,
                         h: 0,
                         ml: "1.5px",
                         borderTop: "6px solid transparent",
                         borderBottom: "6px solid transparent",
-                        borderLeft: "9px solid white"
+                        borderLeft: "9px solid var(--lte-text)"
                       })
                     )),
                     el(
                       VStack,
                       { spacing: 0, flex: 1, minW: 0 },
-                      el(Text, { fontSize: "xs", fontWeight: "semibold", color: "gray.100", noOfLines: 1 }, vs.name),
-                      el(Text, { fontSize: "10px", color: "gray.500" }, videoMetaText(vs.duration, vs.size))
+                      el(Text, { fontSize: "xs", fontWeight: "semibold", color: "var(--lte-text-strong)", noOfLines: 1 }, vs.name),
+                      el(Text, { fontSize: "10px", color: "var(--lte-text-faint)" }, videoMetaText(vs.duration, vs.size))
                     ),
-                    el(Text, { fontSize: "xs", color: accent }, vs.loop ? "↻" : "1×")
+                    el(Text, { fontSize: "xs", color: tone(accent) }, vs.loop ? "↻" : "1×")
                   )
                 ),
                 el(
@@ -795,7 +803,7 @@
                     justifyContent: "center",
                     borderRadius: "md",
                     bg: "transparent",
-                    color: accent,
+                    color: tone(accent),
                     cursor: "pointer",
                     fontSize: "xs"
                   }, vs.vol > 0 ? "🔊" : "🔇"),
@@ -811,7 +819,7 @@
                     className: "lte-mouse-slider lte-card-slider",
                     style: { flex: 1, "--mouse-accent": accent, "--card-accent": accent }
                   }),
-                  el(Text, { fontSize: "10px", color: accent, minW: "28px", textAlign: "right" }, Math.round(vs.vol * 100) + "%")
+                  el(Text, { fontSize: "10px", color: tone(accent), minW: "28px", textAlign: "right" }, Math.round(vs.vol * 100) + "%")
                 ),
                 el(
                   HStack,
@@ -819,7 +827,7 @@
                   el(
                     HStack,
                     { spacing: 1.5, align: "center" },
-                    el(Text, { fontSize: "10px", color: "gray.400" }, t("loopVideo")),
+                    el(Text, { fontSize: "10px", color: "var(--lte-text-muted)" }, t("loopVideo")),
                     el(Switch, { isChecked: vs.loop, colorScheme: "green", size: "sm", onChange: function() { videoSetLoop(!vs.loop); } })
                   ),
                   el(
@@ -851,6 +859,8 @@
     return function MouseEffectsWidget() {
       const host = api.getHostContext();
       const t = useLocale(host);
+      const theme = lteUseTheme(api);
+      const tone = theme.tone;
       const [enabled, setEnabled] = React.useState(_cursorEnabled);
       const [intensity, setIntensity] = React.useState(_cursorIntensity);
       const [isOpen, setIsOpen] = React.useState(false);
@@ -880,8 +890,10 @@
           position: "relative",
           p: 3,
           borderRadius: "xl",
-          bg: "rgba(8,12,24,0.92)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          bg: "var(--lte-surface)",
+          border: "1px solid var(--lte-border)",
+          style: theme.style,
+          boxShadow: "var(--lte-shadow)",
           overflow: "hidden"
         },
         el(Box, {
@@ -911,14 +923,14 @@
                   justifyContent: "center",
                   borderRadius: "md",
                   bg: accent + "33",
-                  color: accent,
+                  color: tone(accent),
                   fontSize: "xs",
                   fontWeight: "bold",
                   border: "1px solid " + accent + "66"
                 },
                 "ME"
               ),
-              el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, t("mouseEffects"))
+              el(Text, { fontSize: "sm", fontWeight: "bold", color: "var(--lte-text-strong)" }, t("mouseEffects"))
             ),
             el(
               HStack,
@@ -936,10 +948,10 @@
               w: "100%",
               p: 2,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.045)",
+              bg: "var(--lte-inner-strong)",
               border: "1px solid " + accent + "66",
               textAlign: "left",
-              color: "white",
+              color: "var(--lte-text)",
               onClick: function() {
                 setIsOpen(!isOpen);
                 if (!isOpen) lteFocusSelectedOption(".lte-home-mouse-options");
@@ -955,7 +967,7 @@
                 el(Text, { fontSize: "md", w: "24px", textAlign: "center" }, selected.icon),
                 el(Text, { fontSize: "sm", fontWeight: "semibold" }, t(selected.labelKey))
               ),
-              el(Text, { className: "lte-mouse-chevron " + (isOpen ? "is-open" : ""), fontSize: "sm", color: "gray.400" }, "⌄")
+              el(Text, { className: "lte-mouse-chevron " + (isOpen ? "is-open" : ""), fontSize: "sm", color: "var(--lte-text-muted)" }, "⌄")
             )
           ),
           isOpen ? el(
@@ -976,7 +988,7 @@
                   borderRadius: "lg",
                   border: "1px solid " + (active ? option.colors[1] + "88" : "transparent"),
                   bg: active ? option.colors[1] + "18" : "transparent",
-                  color: active ? "white" : "gray.300",
+                  color: active ? "var(--lte-text)" : "var(--lte-text-secondary)",
                   textAlign: "left",
                   onClick: function() {
                     chooseEffect(option.id);
@@ -991,16 +1003,16 @@
                     el(Text, { w: "22px", textAlign: "center" }, option.icon),
                     el(Text, { fontSize: "sm" }, t(option.labelKey))
                   ),
-                  active ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                  active ? el(Text, { fontSize: "sm", color: tone(option.colors[1]) }, "✓") : null
                 )
               );
             })
           ) : null,
-          el(Text, { fontSize: "xs", color: "gray.500" }, t(selected.descriptionKey)),
+          el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t(selected.descriptionKey)),
           el(
             HStack,
             { spacing: 2, align: "center" },
-            el(Text, { fontSize: "xs", color: "gray.400", minW: "44px" }, t("intensity")),
+            el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", minW: "44px" }, t("intensity")),
             el("input", {
               type: "range",
               min: 10,
@@ -1011,7 +1023,7 @@
               className: "lte-mouse-slider",
               style: { flex: 1, "--mouse-accent": accent }
             }),
-            el(Text, { fontSize: "xs", color: accent, minW: "34px", textAlign: "right" }, intensity + "%")
+            el(Text, { fontSize: "xs", color: tone(accent), minW: "34px", textAlign: "right" }, intensity + "%")
           )
         )
       );
@@ -1028,6 +1040,8 @@
     return function ClickEffectsWidget() {
       const host = api.getHostContext();
       const t = useLocale(host);
+      const theme = lteUseTheme(api);
+      const tone = theme.tone;
       const [enabled, setEnabled] = React.useState(_clickEnabled);
       const [intensity, setIntensity] = React.useState(_clickIntensity);
       const [isOpen, setIsOpen] = React.useState(false);
@@ -1057,8 +1071,10 @@
           position: "relative",
           p: 3,
           borderRadius: "xl",
-          bg: "rgba(8,12,24,0.92)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          bg: "var(--lte-surface)",
+          border: "1px solid var(--lte-border)",
+          style: theme.style,
+          boxShadow: "var(--lte-shadow)",
           overflow: "hidden"
         },
         el(Box, {
@@ -1088,14 +1104,14 @@
                   justifyContent: "center",
                   borderRadius: "md",
                   bg: accent + "33",
-                  color: accent,
+                  color: tone(accent),
                   fontSize: "xs",
                   fontWeight: "bold",
                   border: "1px solid " + accent + "66"
                 },
                 "CE"
               ),
-              el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, t("clickEffects"))
+              el(Text, { fontSize: "sm", fontWeight: "bold", color: "var(--lte-text-strong)" }, t("clickEffects"))
             ),
             el(
               HStack,
@@ -1113,10 +1129,10 @@
               w: "100%",
               p: 2,
               borderRadius: "xl",
-              bg: "rgba(255,255,255,0.045)",
+              bg: "var(--lte-inner-strong)",
               border: "1px solid " + accent + "66",
               textAlign: "left",
-              color: "white",
+              color: "var(--lte-text)",
               onClick: function() {
                 setIsOpen(!isOpen);
                 if (!isOpen) lteFocusSelectedOption(".lte-home-click-options");
@@ -1132,7 +1148,7 @@
                 el(Text, { fontSize: "md", w: "24px", textAlign: "center" }, selected.icon),
                 el(Text, { fontSize: "sm", fontWeight: "semibold" }, t(selected.labelKey))
               ),
-              el(Text, { className: "lte-mouse-chevron " + (isOpen ? "is-open" : ""), fontSize: "sm", color: "gray.400" }, "⌄")
+              el(Text, { className: "lte-mouse-chevron " + (isOpen ? "is-open" : ""), fontSize: "sm", color: "var(--lte-text-muted)" }, "⌄")
             )
           ),
           isOpen ? el(
@@ -1153,7 +1169,7 @@
                   borderRadius: "lg",
                   border: "1px solid " + (active ? option.colors[1] + "88" : "transparent"),
                   bg: active ? option.colors[1] + "18" : "transparent",
-                  color: active ? "white" : "gray.300",
+                  color: active ? "var(--lte-text)" : "var(--lte-text-secondary)",
                   textAlign: "left",
                   onClick: function() {
                     chooseEffect(option.id);
@@ -1168,16 +1184,16 @@
                     el(Text, { w: "22px", textAlign: "center" }, option.icon),
                     el(Text, { fontSize: "sm" }, t(option.labelKey))
                   ),
-                  active ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                  active ? el(Text, { fontSize: "sm", color: tone(option.colors[1]) }, "✓") : null
                 )
               );
             })
           ) : null,
-          el(Text, { fontSize: "xs", color: "gray.500" }, t(selected.descriptionKey)),
+          el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t(selected.descriptionKey)),
           el(
             HStack,
             { spacing: 2, align: "center" },
-            el(Text, { fontSize: "xs", color: "gray.400", minW: "44px" }, t("intensity")),
+            el(Text, { fontSize: "xs", color: "var(--lte-text-muted)", minW: "44px" }, t("intensity")),
             el("input", {
               type: "range",
               min: 10,
@@ -1188,7 +1204,7 @@
               className: "lte-mouse-slider",
               style: { flex: 1, "--mouse-accent": accent }
             }),
-            el(Text, { fontSize: "xs", color: accent, minW: "34px", textAlign: "right" }, intensity + "%")
+            el(Text, { fontSize: "xs", color: tone(accent), minW: "34px", textAlign: "right" }, intensity + "%")
           )
         )
       );
@@ -1206,6 +1222,8 @@
     return function TitlebarWidget() {
       const host = api.getHostContext();
       const t = useLocale(host);
+      const theme = lteUseTheme(api);
+      const tone = theme.tone;
       const [state, setState] = React.useState(window._lteTitlebar || { enabled: false, supported: false, conflict: false, zone: 20, delay: 180 });
       React.useEffect(function() {
         const id = setInterval(function() {
@@ -1227,8 +1245,10 @@
           position: "relative",
           p: 3,
           borderRadius: "xl",
-          bg: "rgba(8,12,24,0.92)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          bg: "var(--lte-surface)",
+          border: "1px solid var(--lte-border)",
+          style: theme.style,
+          boxShadow: "var(--lte-shadow)",
           overflow: "hidden"
         },
         el(Box, {
@@ -1256,12 +1276,12 @@
                 justifyContent: "center",
                 borderRadius: "md",
                 bg: ACCENT + "33",
-                color: ACCENT,
+                color: tone(ACCENT),
                 fontSize: "xs",
                 fontWeight: "bold",
                 border: "1px solid " + ACCENT + "66"
               }, "TB"),
-              el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, t("titlebar"))
+              el(Text, { fontSize: "sm", fontWeight: "bold", color: "var(--lte-text-strong)" }, t("titlebar"))
             ),
             el(
               HStack,
@@ -1278,10 +1298,10 @@
               })
             )
           ),
-          el(Text, { fontSize: "xs", color: "gray.500" }, t("titlebarDesc")),
-          !supported ? el(Text, { fontSize: "xs", color: "orange.300" }, t("titlebarUnsupportedHint")) : null,
-          conflict ? el(Text, { fontSize: "xs", color: "orange.300" }, t("titlebarConflictHint")) : null,
-          el(Text, { fontSize: "xs", color: "gray.500" }, t("titlebarHint"))
+          el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("titlebarDesc")),
+          !supported ? el(Text, { fontSize: "xs", color: "var(--lte-warning)" }, t("titlebarUnsupportedHint")) : null,
+          conflict ? el(Text, { fontSize: "xs", color: "var(--lte-warning)" }, t("titlebarConflictHint")) : null,
+          el(Text, { fontSize: "xs", color: "var(--lte-text-faint)" }, t("titlebarHint"))
         )
       );
     };

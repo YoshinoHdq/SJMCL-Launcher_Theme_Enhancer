@@ -2,7 +2,7 @@
   "identifier": "org.yoshino.launcher-theme-enhancer",
   "name": "Launcher Theme Enhancer",
   "description": "Weather, video, particles, mouse/click effects & auto titlebar | 天气、动态背景、粒子、鼠标/点击与标题栏",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "author": "hemekewayoshino",
   "frontend": {
     "entry": "frontend/index.js"

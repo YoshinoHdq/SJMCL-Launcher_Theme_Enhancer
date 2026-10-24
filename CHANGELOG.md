@@ -1,5 +1,29 @@
 # Changelog
 
+## v2.4.1 — 2026-10-24
+
+### 简体中文
+
+#### 新增
+- 界面跟随启动器亮暗主题：5 张首页卡片、设置页与视频警告弹窗自动切换配色；深色样式保持原样
+- 亮色模式使用半透明白玻璃卡片、深色文字与淡阴影；强调色文字按亮度自动压暗，保证阅读对比度
+- 天气卡在亮色下降低渐变遮罩透明度并压暗温度数字；滑块、滚动条、胶片光带与悬停状态同步适配
+
+#### 优化
+- 界面色值收敛到共享主题变量（`--lte-*`），后续新增卡片或区块可直接复用
+- 深色模式颜色与 2.4.0 保持一致，不改变现有视觉与交互
+
+### English
+
+#### Added
+- The UI now follows the launcher light/dark color mode: the five home cards, settings page and video warning modal switch automatically, while dark mode keeps its existing look
+- Light mode uses translucent white glass cards, dark text and a soft shadow; accent text is dimmed by luminance for readable contrast
+- Weather gradient opacity and temperature color adapt in light mode; sliders, scrollbars, the film strip and hover states follow the active theme
+
+#### Improved
+- UI colors now live in shared theme variables (`--lte-*`), ready for future cards and sections
+- Dark-mode colors remain identical to 2.4.0; behavior and interactions are unchanged
+
 ## v2.4.0 — 2026-10-24
 
 ### 简体中文
