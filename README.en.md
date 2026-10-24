@@ -1,138 +1,287 @@
-<div align=center>
+<div align="center">
 
-# Launcher Theme Enhancer
+  <h1>Launcher Theme Enhancer</h1>
 
-Integrates City Weather, Dynamic Video Background, and Particle Effects into one seamless launcher enhancement plugin 🎨
+  <p>Weather, video backgrounds, 34 theme particles, 13 mouse trails, 6 click effects and an auto-hiding titlebar, all in one extension.</p>
 
-**English · [简体中文](README.md)**
+  <p>
+    <a href="https://github.com/YoshinoHdq/SJMCL-Launcher_Theme_Enhancer/releases/latest">
+      <img src="https://img.shields.io/github/v/release/YoshinoHdq/SJMCL-Launcher_Theme_Enhancer?style=flat-square&label=release&color=7c6cff" alt="Latest release">
+    </a>
+    <img src="https://img.shields.io/badge/SJMCL-1.1.3%2B-4c9aff?style=flat-square" alt="SJMCL 1.1.3+">
+    <img src="https://img.shields.io/badge/license-MIT-3fb950?style=flat-square" alt="MIT">
+  </p>
 
-<img src="docs/images/launcher-preview.webp" alt="Launcher Theme Enhancer interface preview" width="960">
+  <p><b>English</b> · <a href="README.md">简体中文</a></p>
+
+  <a href="docs/images/overview-dark.webp">
+    <img src="docs/images/overview-dark.webp" alt="Launcher Theme Enhancer dark theme" width="960">
+  </a>
+
+  <p><sub>Dark theme · Theme Enhancer, Mouse Effects and Click Effects running together</sub></p>
 
 </div>
----
 
-## About
+## Quick start
 
-Launcher Theme Enhancer is an SJMCL extension that merges three previously separate plugins into one seamless experience, resolving the conflict issues between them.
+| 1 | 2 | 3 |
+| :---: | :---: | :---: |
+| **Download** the `.sjmclx` from Releases | **Import** Settings → Extensions → Add | **Enable** the extension and refresh the list |
 
-Built-in language toggle between Chinese and English in the settings panel — no need to install separate language versions.
+> Minimum launcher version: `1.1.3`. The auto-hiding titlebar requires `1.3.0+`; `1.3.2` is recommended.
+>
+> This extension cannot coexist with the old standalone plugins such as `sjmcl-video-background`, `sjmcl-weather-effects`, `sjmcl-city-weather` or `Auto Titlebar`. Uninstall them first.
 
-Does not support coexistence with the old standalone plugins (sjmcl-video-background, sjmcl-weather-effects, sjmcl-city-weather). Please uninstall them before using this integrated version for the best experience.
+[Download the latest release](https://github.com/YoshinoHdq/SJMCL-Launcher_Theme_Enhancer/releases/latest) · [View changelog](https://github.com/YoshinoHdq/SJMCL-Launcher_Theme_Enhancer/blob/main/CHANGELOG.md)
 
-## Features
+## Five home cards
 
-### 🌤 City Weather
-- Real-time weather data via the [Open-Meteo](https://open-meteo.com/) API (weather data by Open-Meteo)
-- Worldwide lookup by city name (Open-Meteo geocoding)
-- Improved accuracy and smoother transitions compared to v0.1.0
-- Adds a Dynamic Ambience switch that controls only the weather gradient and icon animation; search and weather data remain available
+| Card | What it does |
+| --- | --- |
+| **City Weather** | Real-time weather by city, with an optional animated ambience |
+| **Theme Enhancer** | 34 theme particles, intensity control and a separately controlled video background |
+| **Mouse Effects** | 13 cursor trails with independent toggle and intensity |
+| **Click Effects** | Six click feedback effects with independent toggle and intensity |
+| **Titlebar** | Auto-hide at the top edge, an 8px drag strip, trigger height and hide delay |
 
-### 🎬 Dynamic Video Background
-- Upload MP4/WebM video files as launcher background; videos over 100MB show a performance/storage warning but can still be used after confirmation
-- Fixed the old issue where video background overlapped other extension pages
-- Volume control, play/remove; shows a notice if saving or restoring fails
+The settings page controls which cards appear on the launcher home page and shows the current state as `5 / 5`. Hiding a card only affects the home page; it does not stop the corresponding particles, trails or video restore logic.
 
-### ✨ Particle Effects (21 types)
+## Follows the launcher light/dark theme
 
-- Cherry Blossom — pink petals drift from the upper-left toward the lower-right with rotation and fluttering
-- Firefly Night — warm wandering lights that slowly drift and pulse in a dark night scene
-- DNA Particle Drift — scattered cyan and magenta helix fragments drifting diagonally through the background
-- Ghost Shadows — translucent drifting spirits with faint glowing eyes
-- Rain Ripples — faint rainfall with expanding elliptical ripples across the lower screen
-- Keyboard Glow — layered RGB underglow, subtle edge lighting, rising motes, and soft short light columns
-- Enchantment — floating enchantment runes
-- Sculk — warden-inspired sculk particles
-- Freeze — ice and frost covering the interface
-- Code — matrix-style green code rain
-- Dust — fine dust floating in the air
-- Vitality — vibrant colored glowing orbs
-- Flame — dancing flame particles
-- Snow — gently falling snowflakes
-- Sunset — warm sunset glow
-- Underwater — underwater bubbles and light rays
-- Aurora — flowing aurora bands
-- Rain — drizzling raindrops
+Cards, the settings page and the video warning modal follow the launcher's light or dark color mode. Dark mode keeps the original deep blue glass look. Light mode uses translucent white glass, dark text and a soft shadow, with accent text dimmed automatically so pale yellow and cyan palettes stay readable on white.
+
+<p align="center">
+  <a href="docs/images/overview-light.webp">
+    <img src="docs/images/overview-light.webp" alt="Launcher Theme Enhancer light theme" width="960">
+  </a>
+</p>
+<p align="center"><sub>Light theme: City Weather, Theme Enhancer and Mouse Effects · click the image for the full-size version</sub></p>
+
+## City weather and video background
+
+City Weather uses [Open-Meteo](https://open-meteo.com/) for real-time data, supports worldwide city lookup, and shows temperature, humidity, wind, feels-like temperature and weather conditions. The Dynamic Ambience switch only controls the gradient and icon animation; search and weather data remain available when it is off.
+
+Video backgrounds support MP4 and WebM. Files over 100MB show a performance and storage warning first, but can still be used after confirmation. The video card handles play/pause, mute and volume, looping, replacing and a two-step remove. Disabling a video stops playback but never deletes the local file.
+
+<p align="center">
+  <a href="docs/images/feature-weather-video.webp">
+    <img src="docs/images/feature-weather-video.webp" alt="City Weather, Film Reel and video background controls" width="960">
+  </a>
+</p>
+<p align="center"><sub>City Weather, Film Reel and video background controls; video and particles are independent · click the image for the full-size version</sub></p>
+
+- Videos are stored locally in IndexedDB and restored after a launcher restart; volume, looping and paused state are remembered
+- If autoplay with sound is blocked, the video restores muted first and unlocks audio after the first click
+- Save or restore failures show a notice and do not leave stale file names or size information behind
+- Video and particles render in a dedicated main-window background layer without covering extension pages, modals or standalone windows; standalone windows do not load dynamic backgrounds by default
+
+## Particle effects (34 types)
+
+Theme particles take their palette from the active effect: accent lines, selectors, sliders and percentage labels all follow it. Effects can be selected from both the settings page and the home card, recent effects are shown first, and effects are grouped into Nature, Sky, Music, Mechanical, Digital and Other.
+
+<details>
+<summary><b>Expand all 34 theme particles</b></summary>
+
+**Nature**
+
+- Rain — gentle falling raindrops
+- Rain Ripples — faint rain lines with expanding elliptical ripples
+- Snow — slowly falling snowflakes
 - Sandstorm — swirling sand and dust
-- Starry Sky — twinkling stars
 - Falling Leaves — leaves drifting in the wind
+- Cherry Blossom — pink petals rotating and fluttering from the upper-left
+- Firefly Night — warm lights drifting and pulsing in a dark night scene
+- Underwater — bubbles and light rays beneath the water
+- Fire — a continuous fire band, three layers of flame tongues and cooling embers
+- Dust — fine dust floating in the air
+- Freeze — ice and frost covering the interface
+- Dew Web — corner spider webs with dew drops, swaying and twinkling
 
-### 🌐 Language Switch
-- Toggle between Chinese and English in settings
-- Remembers the last choice; first launch follows the system language
-- Home widget titles switch immediately with the language, no reload required
-- No need to download separate language versions
+**Sky**
 
-### 💾 Persistent State
-- Remembers particle type, intensity, and running state
-- Stores the selected video in IndexedDB and restores it after restart
-- Remembers video volume and paused state
-- If autoplay with sound is blocked, restores muted first and unlocks audio after the first click
+- Starry Sky — a twinkling field of stars
+- Aurora — three layered curtains of green-teal light with violet edges
+- Sunset — warm sunset glow
+- Lightning — occasional branching bolts with a brief sky flash and afterglow
+- Quantum Entanglement — paired particles linked by faint lines, orbiting in opposite directions and collapsing periodically
 
-### 🧱 Isolated Background Layer
-- Video and particles render in a dedicated main-window background layer without covering extension pages, modals, or standalone windows
-- Dynamic backgrounds are disabled by default in standalone windows
+**Music**
 
-### 🖱 Mouse Effects
-- Adds a dedicated Mouse Effects home card alongside City Weather and Theme Enhancer
-- Uses an expandable effect selector with an animated accent line that follows the active effect
-- Includes Cursor Stardust, Comet, Sparkle, Sakura, Snowflake, and Digital Glitch trails
+- Keyboard Glow — layered RGB underglow that reacts to physical key presses
+- Melody Orbit — glowing notes circling along three tilted elliptical orbits
+- Key Nocturne — two octaves of keys that glow with key presses and send up swaying notes
+- Sound Orb — a central spectrum orb with pulsing bars and expanding sound rings
+
+**Mechanical**
+
+- Pocket Watches — six translucent watches drifting and turning with golden second-hand ripples
+- Meshing Gears — twelve translucent gears around the screen edges, meshing slowly in opposite directions
+- Film Reel — two continuously scrolling film strips with sprocket holes, abstract frames and grain
+- Magnetic Field — two rotating dipoles with iron filings aligned along curved field lines
+
+**Digital**
+
+- DNA Particle Drift — cyan and magenta helix fragments drifting diagonally
+- Ghost Shadows — translucent drifting spirits with faint glowing eyes
+- Vigor — vibrant colored glowing orbs
+- Enchanting — floating enchantment runes
+- Code (Stealth Hacker) — matrix-style green code rain
+- Sculk — warden-inspired sculk particles
+- Signal Glitch — VHS tracking bands, falling pixel glyphs and RGB split
+- Shattered Glass — glass shards drifting and turning with light-swept edge highlights
+- Chat Bubbles — translucent speech bubbles with tails, typing dots and pop rings
+
+</details>
+
+There is also a **Blank** option that clears all theme particles at once.
+
+## Mouse trails and click effects
+
+Mouse Effects and Click Effects are separate home cards. They can be toggled independently and run alongside theme particles.
+
+<p align="center">
+  <a href="docs/images/feature-mouse-click-titlebar.webp">
+    <img src="docs/images/feature-mouse-click-titlebar.webp" alt="Mouse Effects, Click Effects and Titlebar cards" width="960">
+  </a>
+</p>
+<p align="center"><sub>Mouse trails, click effects and the auto-hiding titlebar can be controlled separately · click the image for the full-size version</sub></p>
+
+- **Mouse trails (13)**: Stardust, Comet, Sparkle, Sakura, Snowflake, Digital Glitch, Note, Feather, Rune, Enderman, Mirror Shard, Arc, Confetti
+- **Click effects (6)**: Ripple, Sparks, Rune Circle, Frostbite, Magnetic Field, Shatterpoint
 - No particles are created while the pointer is stationary, and the canvas loop pauses when idle
-- Includes an independent toggle and intensity control and runs alongside theme particles
-- Disabled by default and can be enabled from the home card
+- Clicks respond to the left button and touch only, use passive listeners and never block default page behavior
 
-### 🚀 Performance & Stability
-- Three performance modes: Auto / High Quality / Power Saver, using the same selector style as theme particles
-- Auto caps render resolution at 1.5x screen density, High Quality up to 2x, Power Saver uses 1x and caps theme particles at 30 FPS
-- Video and animations pause automatically while the launcher window is hidden and resume when visible
-- The background layer falls back gracefully and re-attaches when the launcher DOM changes; canvases re-measure on resize
+## Auto-hiding titlebar
 
-### 🎛 Unified Card Interaction
-- City Weather, Theme Enhancer, and Mouse Effects now share the same title icon, status badge, and toggle language
-- The accent line pauses and loses brightness and saturation while its card is disabled
-- The Theme Enhancer particle toggle controls particles only; the video background remains independently controlled
-- Theme accent lines, selectors, sliders, and percentage labels follow the active particle palette
-- The theme selector supports expansion, bounded scrolling, chevron rotation, and selected-item feedback
+Move the pointer to the top edge to reveal the titlebar; it hides again after the configured delay. An 8px drag strip remains at the top while hidden, so the window can still be moved.
 
-### ⚙️ Settings Interface
-- The settings page now uses the same icons, status badges, animated accent lines, and interaction feedback as the home cards
-- Theme effects use an expandable selector with a smoothly rotating chevron and a bounded, scrollable list
-- When no video is selected, a compact file picker replaces the former oversized block
-- Weather, theme particle, and video volume sliders share the same colored interaction style
-- Settings stay synchronized with the home cards for toggles, particle type, intensity, and language
-- City Weather, Theme Enhancer, and Mouse Effects home widgets can be shown or hidden independently
-- Home widget visibility changes are applied together through the Apply & Reload action
+- Trigger height is configurable from 8–40px
+- Hide delay is configurable from 80–400ms
+- The extension retries and watches for titlebars recreated by the launcher
+- A conflict warning appears if the legacy Auto Titlebar extension is active
+- Requires launcher 1.3.0+; the card disables itself with a notice when unsupported
 
-## Installation
+This feature is merged from the discontinued [SJMCL-Auto_Titlebar](https://github.com/YoshinoHdq/SJMCL-Auto_Titlebar) (MIT). Uninstall the standalone version first.
 
-1. Download the .sjmclx file from Releases
-2. Open SJMCL → Settings → Extension Management → Import. Supports file selection and drag-and-drop import
-3. Enable and enjoy
+## Settings and performance
+
+The settings page uses the same icons, status badges and animated accent lines as the home cards. Toggles, particle type, intensity, language and video state stay synchronized.
+
+- **Home card visibility**: show or hide each of the five cards, then apply the changes together with Apply & Reload
+- **Language**: switch between Chinese and English, remember the last choice, follow the system language on first launch, and update home card titles immediately
+- **Performance modes**: Auto / High Quality / Power Saver. Auto caps render resolution at 1.5x screen density, High Quality up to 2x, and Power Saver uses 1x with theme particles limited to 30 FPS
+- **Reduce Motion**: pauses accent-line, film-strip and titlebar transitions and lowers lightning frequency and brightness; mouse trails still respond
+- **Background pause**: video and animations pause while the launcher window is hidden and resume when visible
+- **Resilient background layer**: falls back and re-attaches when the launcher DOM changes, and re-measures canvases on resize
+- **Manual update check**: checks GitHub Releases on demand from the settings footer, with no automatic checks or notification badge; a newer version can be handed to the launcher for download and installation
+
+<p align="center">
+  <a href="docs/images/settings-cards.webp">
+    <img src="docs/images/settings-cards.webp" alt="Settings: home card visibility and language" width="960">
+  </a>
+</p>
+<p align="center"><sub>Settings: control each home card independently; current state 5 / 5 · click the image for the full-size version</sub></p>
+
+<p align="center">
+  <a href="docs/images/settings-performance.webp">
+    <img src="docs/images/settings-performance.webp" alt="Settings: titlebar, Reduce Motion and performance mode" width="960">
+  </a>
+</p>
+<p align="center"><sub>Titlebar trigger height and delay, Reduce Motion and three performance modes · click the image for the full-size version</sub></p>
+
+## Compatibility and data
+
+| Item | Details |
+| --- | --- |
+| Minimum launcher | `1.1.3` |
+| Auto-hiding titlebar | Requires `1.3.0+` |
+| Recommended launcher | `1.3.2` |
+| Video formats | MP4 / WebM; files over 100MB show a warning first |
+| Legacy plugins | Not compatible with standalone video-background, weather-effects, city-weather or Auto Titlebar |
+| Local data | Settings and preferences in localStorage; videos in IndexedDB |
+| Network | City names are sent to Open-Meteo for weather; update checks request GitHub Releases |
+| Standalone windows | Dynamic backgrounds are disabled by default |
+
+Video, particles and mouse effects render locally; video files and personal data are never uploaded.
+
+## FAQ
+
+<details>
+<summary><b>Can I install it alongside the old standalone plugins?</b></summary>
+
+No. This extension already includes weather, video and titlebar features. Keeping the old plugins installed can create duplicate background layers or titlebar bindings. Uninstall them before enabling this extension.
+
+</details>
+
+<details>
+<summary><b>Why is the Titlebar card disabled?</b></summary>
+
+The auto-hiding titlebar requires launcher `1.3.0+` and does not run in standalone windows. The card is also disabled when the legacy Auto Titlebar extension is detected; uninstall it and reopen the settings page.
+
+</details>
+
+<details>
+<summary><b>Why is the video muted?</b></summary>
+
+The system may have blocked autoplay with sound. The extension restores the video muted first and unlocks audio after the first click inside the launcher. You can also check the mute and volume controls on the video card.
+
+</details>
+
+<details>
+<summary><b>Can I use a video larger than 100MB?</b></summary>
+
+Yes. The warning describes performance and storage risks but does not block the file. Larger videos take longer to read and restore, so decide based on your device.
+
+</details>
+
+<details>
+<summary><b>Does the interface follow the launcher light/dark theme?</b></summary>
+
+Yes. The five home cards, settings page and video warning modal all follow the launcher's light or dark color mode. Dark mode keeps its original appearance.
+
+</details>
+
+<details>
+<summary><b>Where is my data stored, and what happens on uninstall?</b></summary>
+
+Settings and preferences live in the extension's localStorage, and videos live in local IndexedDB. Everything stays on your machine and is not uploaded. Uninstalling or deleting extension data means you will need to configure it again.
+
+</details>
+
+<details>
+<summary><b>What if the update check fails?</b></summary>
+
+The check needs access to GitHub Releases and can be affected by network, proxy or API rate limits. Try again later, or open the Releases page and download the latest `.sjmclx` manually.
+
+</details>
+
 ## Development
 
 ```bash
 npm install
 npm run dev                  # build into the launcher extension dir and hot-reload via deeplink
 npm run build                # release package: dist/<identifier>-<version>.sjmclx
-npm run build -- --dev       # dev package with a -dev suffix
-npm run bump -- 2.2.0        # sync versions in package.json, sjmcl.ext.json and the settings page
+npm run build -- --dev       # development package with a -dev suffix
+npm run validate             # validate effects, mappings, locale keys and README counts
+npm run bump -- 2.5.0        # sync versions in package.json and sjmcl.ext.json
 ```
 
-The runtime source lives in `src/` and is concatenated into a single scope in the order defined by `scripts/source-order.mjs`. Theme particles are split by effect under `src/effects/theme/`; add a new effect by creating a file and registering it in the order list. Cross-file `import` is not supported yet; the modules will evolve into proper ES modules later.
+The runtime source lives in `src/` and is concatenated into one scope in the order defined by `scripts/source-order.mjs`. Theme particles are split by effect under `src/effects/theme/`; add a new effect by creating a file and registering it in the order list. Cross-file `import` is not supported.
 
-`frontend/index.js` and `dist/` are build outputs — do not edit them directly. The build injects the version from `sjmcl.ext.json` and validates that Chinese/English locale keys match the type definitions.
+`frontend/index.js` and `dist/` are build outputs. Do not edit them directly; the build injects the version from `sjmcl.ext.json` and validates locale keys against the type definitions.
 
-## Compatibility
+## Related projects and documentation
 
-- Minimum launcher version: 1.1.3
-
-
-## Related Projects & Documentation
-
-- [SJMCL Extension Documentation](https://mc.sjtu.cn/sjmcl/dev/extension/)
+- [SJMCL extension documentation](https://mc.sjtu.cn/sjmcl/dev/extension/)
+- [SJMCL extension API](https://mc.sjtu.cn/sjmcl/dev/extension/api.html)
 - [awesome-SJMCL-extensions](https://github.com/SJMC-Dev/awesome-SJMCL-extensions)
-## License
+- [Open-Meteo](https://open-meteo.com/): weather data source
 
-MIT
+## Credits and license
+
+- Auto-hiding titlebar merged from [SJMCL-Auto_Titlebar](https://github.com/YoshinoHdq/SJMCL-Auto_Titlebar) (MIT), which is no longer maintained
+- Weather data provided by [Open-Meteo](https://open-meteo.com/)
+- Licensed under MIT
 
 ---
 
