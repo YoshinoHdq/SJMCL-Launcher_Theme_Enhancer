@@ -1,4 +1,41 @@
-﻿# Changelog
+# Changelog
+
+## v2.4.0 — 2026-10-24
+
+### 简体中文
+
+#### 新增
+- 合并 Auto Titlebar：首页卡片 + 设置页开关，支持触发高度（8–40px）、隐藏延迟（80–400ms），隐藏时保留 8px 拖动条；检测旧插件冲突并提示
+- 视频背景 UI 重做：状态化媒体控制卡、动态胶片光带（无缩略图）、播放/暂停、静音/音量、循环、两步移除；关闭视频不删除文件
+- 点击效果独立卡片：波纹、火花、符文法阵、冻结、磁场、镜面裂纹
+- 主题粒子新增：旋律环流、琴键夜曲、碎镜浮光、量子纠缠、胶片流转、声波球、时之怀表、咬合齿轮、信号故障、聊天气泡、磁场、蛛网晨露、闪电；删除浮羽
+- 鼠标拖尾新增：音符、羽毛、附魔符文、末影粒子、镜面碎片、电弧、碎纸
+- 设置页手动检查更新（无自动检查/小红点），支持下载并安装
+- 主题选择器按类别分组，最近使用置顶；设置页新增“减少动态效果”
+
+#### 优化
+- 构建前运行一致性校验：效果/映射/语言键/README 数量
+- 蛛网和磁场路径缓存、状态轮询降频并在页面隐藏时暂停
+- 更新检查增加 15 秒超时、友好错误、五分钟缓存和上次检查时间
+- 视频播放/暂停改用几何图标；标题栏目标检测跳过自身拖动条和 body/html
+
+### English
+
+#### Added
+- Merged Auto Titlebar: home card + settings toggle with trigger zone (8–40px) and hide delay (80–400ms), 8px drag strip while hidden, legacy-plugin conflict warning
+- Redesigned video background UI: status-driven media card, animated film-strip band (no thumbnail), play/pause, mute/volume, loop, two-step remove; disabling does not delete the file
+- Dedicated Click Effects card: ripple, sparks, rune circle, frostbite, magnetic field, shatterpoint
+- New theme effects: Melody Orbit, Key Nocturne, Shattered Glass, Quantum Entanglement, Film Reel, Sound Orb, Pocket Watches, Meshing Gears, Signal Glitch, Chat Bubbles, Magnetic Field, Dew Web, Lightning; removed Drifting Feathers
+- New mouse trails: Note, Feather, Rune, Enderman, Mirror Shards, Arc, Confetti
+- Manual update check in settings (no auto check or badge), with download & install
+- Grouped theme selector with recent effects first; Reduce Motion setting
+
+#### Improved
+- Build-time consistency validation for effects, mappings, locale keys, and README counts
+- Cached spider-web and magnetic-field paths; lower polling frequency and pause when hidden
+- Update check with 15s timeout, friendly errors, 5-minute cache, and last-checked time
+- Geometric play/pause icons; titlebar target detection skips its own strip and body/html
+
 
 ## v2.2.0 — 2026-10-23
 

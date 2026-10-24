@@ -1,7 +1,8 @@
+const ENCHANTING_GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
   themeEffects.enchanting = {
     init: function(c2) {
       const p = [];
-      const glyphs2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       for (let i = 0; i < 60; i++) {
         p.push({
           x: Math.random() * c2.width,
@@ -13,7 +14,7 @@
           rotSp: (Math.random() - 0.5) * 0.01,
           phase: Math.random() * Math.PI * 2,
           wx: (Math.random() - 0.5) * 0.5,
-          char: glyphs2[Math.floor(Math.random() * glyphs2.length)]
+          char: ENCHANTING_GLYPHS[Math.floor(Math.random() * ENCHANTING_GLYPHS.length)]
         });
       }
       for (let i = 0; i < 100; i++) {
@@ -95,7 +96,7 @@
         if (d.y < -40) {
           d.y = h + 30;
           d.x = Math.random() * w;
-          d.char = glyphs[Math.floor(Math.random() * glyphs.length)];
+          d.char = ENCHANTING_GLYPHS[Math.floor(Math.random() * ENCHANTING_GLYPHS.length)];
         }
       }
     }

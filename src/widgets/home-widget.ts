@@ -16,6 +16,19 @@
       rain: "effectRain",
       ripples: "effectRipples",
       keyboard_glow: "effectKeyboardGlow",
+      melody_orbit: "effectMelodyOrbit",
+      key_nocturne: "effectKeyNocturne",
+      shattered_glass: "effectShatteredGlass",
+      quantum_cloud: "effectQuantumCloud",
+      film_reel: "effectFilmReel",
+      waveform_ribbon: "effectWaveformRibbon",
+      clock_rim: "effectClockRim",
+      meshing_gears: "effectMeshingGears",
+      signal_glitch: "effectSignalGlitch",
+      chat_bubbles: "effectChatBubbles",
+      magnetic_field: "effectMagneticField",
+      spider_web: "effectSpiderWeb",
+      lightning: "effectLightning",
       snow: "effectSnow",
       sand: "effectSandstorm",
       stars: "effectStarrySky",
@@ -346,11 +359,30 @@
     const el = React.createElement;
     const { Badge, Box, VStack, HStack, Switch, Text, Button } = ChakraUI;
     function useVidState() {
-      const [s, setS] = useState({ active: window._vactive || false, paused: window._vpaused || false, vol: window._vvol == null ? 0.5 : window._vvol });
+      const [s, setS] = useState({
+        active: window._vactive || false,
+        paused: window._vpaused || false,
+        vol: window._vvol == null ? 0.5 : window._vvol,
+        enabled: window._venabled !== false,
+        loop: window._vloop !== false,
+        name: getLocal("v_name", ""),
+        size: getLocal("v_size", 0),
+        duration: getLocal("v_duration", 0)
+      });
       useEffect(function() {
         const id = setInterval(function() {
-          setS({ active: window._vactive || false, paused: window._vpaused || false, vol: window._vvol == null ? 0.5 : window._vvol });
-        }, 150);
+          if (document.hidden) return;
+          setS({
+            active: window._vactive || false,
+            paused: window._vpaused || false,
+            vol: window._vvol == null ? 0.5 : window._vvol,
+            enabled: window._venabled !== false,
+            loop: window._vloop !== false,
+            name: getLocal("v_name", ""),
+            size: getLocal("v_size", 0),
+            duration: getLocal("v_duration", 0)
+          });
+        }, 400);
         return function() {
           clearInterval(id);
         };
@@ -368,6 +400,28 @@
       const [selInt, setSelInt] = useState(_ti2);
       const [running, setRunning] = useState(Boolean(window._trun));
       const [isOpen, setIsOpen] = useState(false);
+      const [confirmRemoveVideo, setConfirmRemoveVideo] = useState(false);
+      function handleRemoveVideo() {
+        if (!confirmRemoveVideo) {
+          setConfirmRemoveVideo(true);
+          setTimeout(function() {
+            setConfirmRemoveVideo(false);
+          }, 3000);
+          return;
+        }
+        setConfirmRemoveVideo(false);
+        videoKill();
+      }
+      function videoMetaText(duration, size) {
+        var parts = [];
+        if (isFinite(duration) && duration > 0) {
+          var seconds = Math.floor(duration % 60);
+          var minutes = Math.floor(duration / 60);
+          parts.push(minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+        }
+        if (size > 0) parts.push(formatVideoSize(size));
+        return parts.join(" · ");
+      }
       const selected = getThemeOption(selType);
       const accent = selected.colors[1];
       const lineGradient = "linear-gradient(90deg, " + selected.colors[0] + ", " + selected.colors[1] + ", " + selected.colors[2] + ", " + selected.colors[0] + ")";
@@ -399,6 +453,7 @@
         }
       }
       function changeType(v) {
+        rememberThemeUse(v);
         setSelType(v);
         window._tt = v;
         _tt = v;
@@ -528,6 +583,7 @@
                   color: "white",
                   onClick: function() {
                     setIsOpen(!isOpen);
+                    if (!isOpen) lteFocusSelectedOption(".lte-home-theme-options");
                   },
                   "aria-expanded": isOpen
                 },
@@ -540,32 +596,52 @@
               ),
               isOpen ? el(
                 VStack,
-                { className: "lte-mouse-options lte-card-options", spacing: 1, align: "stretch" },
-                THEME_OPTIONS.map(function(option) {
-                  const optionActive = option.v === selType;
+                { className: "lte-mouse-options lte-card-options lte-home-theme-options", spacing: 1, align: "stretch", style: { "--card-accent": accent } },
+                getThemeSelectorSections().map(function(section) {
                   return el(
                     Box,
-                    {
-                      as: "button",
-                      key: option.v,
-                      type: "button",
-                      className: "lte-mouse-option lte-card-option",
-                      w: "100%",
-                      p: 2,
-                      borderRadius: "lg",
-                      border: "1px solid " + (optionActive ? option.colors[1] + "88" : "transparent"),
-                      bg: optionActive ? option.colors[1] + "18" : "transparent",
-                      color: optionActive ? "white" : "gray.300",
-                      textAlign: "left",
-                      onClick: function() {
-                        chooseEffect(option.v);
-                      }
-                    },
+                    { key: section.labelKey, w: "100%" },
+                    el(Text, {
+                      fontSize: "10px",
+                      fontWeight: "semibold",
+                      color: accent,
+                      opacity: 0.72,
+                      px: 1,
+                      pt: 1.5,
+                      pb: 0.5
+                    }, t(section.labelKey)),
                     el(
-                      HStack,
-                      { justify: "space-between", align: "center" },
-                      el(Text, { fontSize: "sm" }, t(fxLocaleKey(option.v))),
-                      optionActive ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                      VStack,
+                      { spacing: 1, align: "stretch" },
+                      section.options.map(function(option) {
+                        const optionActive = option.v === selType;
+                        return el(
+                          Box,
+                          {
+                            as: "button",
+                            key: option.v,
+                            "data-lte-active": optionActive ? "1" : "0",
+                            type: "button",
+                            className: "lte-mouse-option lte-card-option",
+                            w: "100%",
+                            p: 2,
+                            borderRadius: "lg",
+                            border: "1px solid " + (optionActive ? option.colors[1] + "88" : "transparent"),
+                            bg: optionActive ? option.colors[1] + "18" : "transparent",
+                            color: optionActive ? "white" : "gray.300",
+                            textAlign: "left",
+                            onClick: function() {
+                              chooseEffect(option.v);
+                            }
+                          },
+                          el(
+                            HStack,
+                            { justify: "space-between", align: "center" },
+                            el(Text, { fontSize: "sm" }, t(fxLocaleKey(option.v))),
+                            optionActive ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                          )
+                        );
+                      })
                     )
                   );
                 })
@@ -593,7 +669,7 @@
           el(Text, { fontSize: "xs", color: "gray.500" }, t("themeSwitchHint")),
           el(
             Box,
-            { p: 2, borderRadius: "lg", bg: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.06)" },
+            { p: 2.5, borderRadius: "lg", bg: "rgba(255,255,255,0.035)", border: "1px solid " + accent + "2e", style: { "--card-accent": accent } },
             el(
               VStack,
               { spacing: 2, align: "stretch" },
@@ -601,45 +677,165 @@
                 HStack,
                 { justify: "space-between", align: "center" },
                 el(Text, { fontSize: "xs", color: "gray.300", fontWeight: "600" }, t("videoBackground")),
-                el(Badge, { colorScheme: vs.active ? "blue" : "gray", variant: "subtle", fontSize: "xs", borderRadius: "full", px: 2 }, vs.active ? t("video") : t("off"))
+                el(
+                  HStack,
+                  { spacing: 1.5, align: "center" },
+                  el(Badge, {
+                    colorScheme: !vs.name || !vs.enabled ? "gray" : vs.paused ? "yellow" : "green",
+                    variant: "subtle",
+                    fontSize: "xs",
+                    borderRadius: "full",
+                    px: 2
+                  }, !vs.name || !vs.enabled ? t("off") : vs.paused ? t("paused") : t("playing")),
+                  el(Switch, {
+                    isChecked: Boolean(vs.name) && vs.enabled,
+                    isDisabled: !vs.name,
+                    size: "sm",
+                    colorScheme: "green",
+                    onChange: function() {
+                      videoSetEnabled(!vs.enabled);
+                    }
+                  })
+                )
               ),
-              el(
-                HStack,
-                { spacing: 1, flex: 1 },
-                /*pause removed*/
-                el(Button, {
-                  size: "xs",
-                  colorScheme: "red",
-                  variant: "ghost",
-                  px: 1,
-                  fontSize: "11px",
-                  onClick: videoKill
-                }, t("remove")),
-                el(Button, {
-                  size: "xs",
-                  colorScheme: "green",
-                  variant: "ghost",
-                  px: 1,
-                  fontSize: "11px",
-                  onClick: pickVideoFile
-                }, t("change"))
-              ),
-              el(
+              !vs.name ? el(
                 Box,
-                null,
-                el(Text, { fontSize: "xs", color: "rgba(255,255,255,0.4)", mb: 1 }, t("volume") + ": " + Math.round(vs.vol * 100) + "%"),
-                el("input", {
-                  type: "range",
-                  min: 0,
-                  max: 1,
-                  step: 0.01,
-                  defaultValue: vs.vol,
-                  onChange: function(e) {
-                    videoVolume(parseFloat(e.target.value));
+                {
+                  as: "button",
+                  type: "button",
+                  w: "100%",
+                  py: 3,
+                  borderRadius: "md",
+                  border: "1px dashed " + accent + "66",
+                  bg: "rgba(255,255,255,0.025)",
+                  textAlign: "center",
+                  onClick: pickVideoFile,
+                  className: "lte-mouse-selector"
+                },
+                el(Text, { fontSize: "sm", color: "gray.200" }, "🎞️ " + t("selectVideo")),
+                el(Text, { fontSize: "10px", color: "gray.500" }, "MP4 / WebM")
+              ) : el(
+                VStack,
+                { spacing: 2, align: "stretch" },
+                el(
+                  Box,
+                  {
+                    position: "relative",
+                    borderRadius: "md",
+                    overflow: "hidden",
+                    border: "1px solid " + accent + "33",
+                    style: { "--card-accent": accent },
+                    opacity: vs.enabled ? 1 : 0.72
                   },
-                  className: "lte-mouse-slider lte-card-slider",
-                  style: { width: "100%", "--mouse-accent": accent, "--card-accent": accent }
-                })
+                  el(Box, {
+                    position: "absolute",
+                    inset: 0,
+                    className: "lte-video-strip " + (vs.enabled && !vs.paused ? "is-live" : "is-paused")
+                  }),
+                  el(
+                    HStack,
+                    { position: "relative", zIndex: 1, spacing: 2, align: "center", p: 2 },
+                    el(Box, {
+                      as: "button",
+                      type: "button",
+                      onClick: function() {
+                        if (!vs.enabled) return;
+                        if (window._vpaused) videoPlay();
+                        else videoPause();
+                      },
+                      w: "32px",
+                      h: "32px",
+                      borderRadius: "full",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      bg: accent + "22",
+                      border: "1px solid " + accent + "66",
+                      color: "white",
+                      fontSize: "xs",
+                      cursor: vs.enabled ? "pointer" : "default",
+                      opacity: vs.enabled ? 1 : 0.45
+                    }, el(
+                      Box,
+                      { display: "flex", alignItems: "center", justifyContent: "center" },
+                      vs.enabled && !vs.paused ? el(
+                        HStack,
+                        { spacing: "3px", align: "center" },
+                        el(Box, { w: "3px", h: "11px", borderRadius: "1px", bg: "white" }),
+                        el(Box, { w: "3px", h: "11px", borderRadius: "1px", bg: "white" })
+                      ) : el(Box, {
+                        w: 0,
+                        h: 0,
+                        ml: "1.5px",
+                        borderTop: "6px solid transparent",
+                        borderBottom: "6px solid transparent",
+                        borderLeft: "9px solid white"
+                      })
+                    )),
+                    el(
+                      VStack,
+                      { spacing: 0, flex: 1, minW: 0 },
+                      el(Text, { fontSize: "xs", fontWeight: "semibold", color: "gray.100", noOfLines: 1 }, vs.name),
+                      el(Text, { fontSize: "10px", color: "gray.500" }, videoMetaText(vs.duration, vs.size))
+                    ),
+                    el(Text, { fontSize: "xs", color: accent }, vs.loop ? "↻" : "1×")
+                  )
+                ),
+                el(
+                  HStack,
+                  { spacing: 1, align: "center" },
+                  el(Box, {
+                    as: "button",
+                    type: "button",
+                    onClick: videoToggleMute,
+                    w: "24px",
+                    h: "22px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "md",
+                    bg: "transparent",
+                    color: accent,
+                    cursor: "pointer",
+                    fontSize: "xs"
+                  }, vs.vol > 0 ? "🔊" : "🔇"),
+                  el("input", {
+                    type: "range",
+                    min: 0,
+                    max: 1,
+                    step: 0.01,
+                    value: vs.vol,
+                    onChange: function(e) {
+                      videoVolume(parseFloat(e.target.value));
+                    },
+                    className: "lte-mouse-slider lte-card-slider",
+                    style: { flex: 1, "--mouse-accent": accent, "--card-accent": accent }
+                  }),
+                  el(Text, { fontSize: "10px", color: accent, minW: "28px", textAlign: "right" }, Math.round(vs.vol * 100) + "%")
+                ),
+                el(
+                  HStack,
+                  { justify: "space-between", align: "center" },
+                  el(
+                    HStack,
+                    { spacing: 1.5, align: "center" },
+                    el(Text, { fontSize: "10px", color: "gray.400" }, t("loopVideo")),
+                    el(Switch, { isChecked: vs.loop, colorScheme: "green", size: "sm", onChange: function() { videoSetLoop(!vs.loop); } })
+                  ),
+                  el(
+                    HStack,
+                    { spacing: 1 },
+                    el(Button, { size: "xs", variant: "ghost", px: 1, fontSize: "10px", onClick: pickVideoFile }, t("change")),
+                    el(Button, {
+                      size: "xs",
+                      variant: "ghost",
+                      px: 1,
+                      fontSize: "10px",
+                      colorScheme: "red",
+                      onClick: handleRemoveVideo
+                    }, confirmRemoveVideo ? t("confirmRemove") : t("remove"))
+                  )
+                )
               )
             )
           )
@@ -746,6 +942,7 @@
               color: "white",
               onClick: function() {
                 setIsOpen(!isOpen);
+                if (!isOpen) lteFocusSelectedOption(".lte-home-mouse-options");
               },
               "aria-expanded": isOpen
             },
@@ -763,7 +960,7 @@
           ),
           isOpen ? el(
             VStack,
-            { className: "lte-mouse-options", spacing: 1, align: "stretch" },
+            { className: "lte-mouse-options lte-card-options lte-home-mouse-options", spacing: 1, align: "stretch", style: { "--card-accent": accent } },
             MOUSE_EFFECT_OPTIONS.map(function(option) {
               const active = option.id === effectType;
               return el(
@@ -771,6 +968,7 @@
                 {
                   as: "button",
                   key: option.id,
+                  "data-lte-active": active ? "1" : "0",
                   type: "button",
                   className: "lte-mouse-option",
                   w: "100%",
@@ -821,3 +1019,270 @@
   }
 
   
+
+  function createClickEffectsWidget(api) {
+    ensureMouseUiStyles();
+    const React = api.React;
+    const el = React.createElement;
+    const { Badge, Box, HStack, Switch, Text, VStack } = api.ChakraUI;
+    return function ClickEffectsWidget() {
+      const host = api.getHostContext();
+      const t = useLocale(host);
+      const [enabled, setEnabled] = React.useState(_clickEnabled);
+      const [intensity, setIntensity] = React.useState(_clickIntensity);
+      const [isOpen, setIsOpen] = React.useState(false);
+      const [effectType, setEffectType] = React.useState(_clickEffectType);
+      const selected = getClickEffectOption(effectType);
+      const accent = selected.colors[1];
+      const lineGradient = "linear-gradient(90deg, " + selected.colors[0] + ", " + selected.colors[1] + ", " + selected.colors[2] + ", " + selected.colors[0] + ")";
+      function toggleEnabled() {
+        const next = !enabled;
+        setEnabled(next);
+        if (next) startClickEffects();
+        else stopClickEffects(false);
+      }
+      function changeIntensity(event) {
+        const next = parseInt(event.target.value, 10);
+        setIntensity(next);
+        setClickIntensity(next);
+      }
+      function chooseEffect(nextEffect) {
+        setEffectType(nextEffect);
+        setClickEffectType(nextEffect);
+        setIsOpen(false);
+      }
+      return el(
+        Box,
+        {
+          position: "relative",
+          p: 3,
+          borderRadius: "xl",
+          bg: "rgba(8,12,24,0.92)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          overflow: "hidden"
+        },
+        el(Box, {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          className: "lte-mouse-accent-line " + (enabled ? "" : "lte-mouse-paused"),
+          style: { backgroundImage: lineGradient }
+        }),
+        el(
+          VStack,
+          { align: "stretch", spacing: 3, position: "relative", zIndex: 1 },
+          el(
+            HStack,
+            { justify: "space-between", align: "center" },
+            el(
+              HStack,
+              { spacing: 2, align: "center" },
+              el(
+                Box,
+                {
+                  w: "26px",
+                  h: "26px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "md",
+                  bg: accent + "33",
+                  color: accent,
+                  fontSize: "xs",
+                  fontWeight: "bold",
+                  border: "1px solid " + accent + "66"
+                },
+                "CE"
+              ),
+              el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, t("clickEffects"))
+            ),
+            el(
+              HStack,
+              { spacing: 2, align: "center" },
+              el(Badge, { colorScheme: enabled ? "green" : "gray", variant: "solid", fontSize: "xs", borderRadius: "full", px: 2 }, enabled ? t("on") : t("off")),
+              el(Switch, { isChecked: enabled, colorScheme: "blue", size: "sm", onChange: toggleEnabled })
+            )
+          ),
+          el(
+            Box,
+            {
+              as: "button",
+              type: "button",
+              className: "lte-mouse-selector",
+              w: "100%",
+              p: 2,
+              borderRadius: "xl",
+              bg: "rgba(255,255,255,0.045)",
+              border: "1px solid " + accent + "66",
+              textAlign: "left",
+              color: "white",
+              onClick: function() {
+                setIsOpen(!isOpen);
+                if (!isOpen) lteFocusSelectedOption(".lte-home-click-options");
+              },
+              "aria-expanded": isOpen
+            },
+            el(
+              HStack,
+              { justify: "space-between", align: "center" },
+              el(
+                HStack,
+                { spacing: 2, align: "center" },
+                el(Text, { fontSize: "md", w: "24px", textAlign: "center" }, selected.icon),
+                el(Text, { fontSize: "sm", fontWeight: "semibold" }, t(selected.labelKey))
+              ),
+              el(Text, { className: "lte-mouse-chevron " + (isOpen ? "is-open" : ""), fontSize: "sm", color: "gray.400" }, "⌄")
+            )
+          ),
+          isOpen ? el(
+            VStack,
+            { className: "lte-mouse-options lte-card-options lte-home-click-options", spacing: 1, align: "stretch", style: { "--card-accent": accent } },
+            CLICK_EFFECT_OPTIONS.map(function(option) {
+              const active = option.id === effectType;
+              return el(
+                Box,
+                {
+                  as: "button",
+                  key: option.id,
+                  "data-lte-active": active ? "1" : "0",
+                  type: "button",
+                  className: "lte-mouse-option",
+                  w: "100%",
+                  p: 2,
+                  borderRadius: "lg",
+                  border: "1px solid " + (active ? option.colors[1] + "88" : "transparent"),
+                  bg: active ? option.colors[1] + "18" : "transparent",
+                  color: active ? "white" : "gray.300",
+                  textAlign: "left",
+                  onClick: function() {
+                    chooseEffect(option.id);
+                  }
+                },
+                el(
+                  HStack,
+                  { justify: "space-between", align: "center" },
+                  el(
+                    HStack,
+                    { spacing: 2, align: "center" },
+                    el(Text, { w: "22px", textAlign: "center" }, option.icon),
+                    el(Text, { fontSize: "sm" }, t(option.labelKey))
+                  ),
+                  active ? el(Text, { fontSize: "sm", color: option.colors[1] }, "✓") : null
+                )
+              );
+            })
+          ) : null,
+          el(Text, { fontSize: "xs", color: "gray.500" }, t(selected.descriptionKey)),
+          el(
+            HStack,
+            { spacing: 2, align: "center" },
+            el(Text, { fontSize: "xs", color: "gray.400", minW: "44px" }, t("intensity")),
+            el("input", {
+              type: "range",
+              min: 10,
+              max: 100,
+              step: 5,
+              value: intensity,
+              onChange: changeIntensity,
+              className: "lte-mouse-slider",
+              style: { flex: 1, "--mouse-accent": accent }
+            }),
+            el(Text, { fontSize: "xs", color: accent, minW: "34px", textAlign: "right" }, intensity + "%")
+          )
+        )
+      );
+    };
+  }
+
+
+  function createTitlebarWidget(api) {
+    ensureMouseUiStyles();
+    const React = api.React;
+    const el = React.createElement;
+    const { Badge, Box, HStack, Switch, Text, VStack } = api.ChakraUI;
+    const ACCENT = "#8aa8ff";
+    const GRADIENT = "linear-gradient(90deg, #c6d4ff, #8aa8ff, #b7a8ff, #c6d4ff)";
+    return function TitlebarWidget() {
+      const host = api.getHostContext();
+      const t = useLocale(host);
+      const [state, setState] = React.useState(window._lteTitlebar || { enabled: false, supported: false, conflict: false, zone: 20, delay: 180 });
+      React.useEffect(function() {
+        const id = setInterval(function() {
+          setState(Object.assign({ enabled: false, supported: false, conflict: false, zone: 20, delay: 180 }, window._lteTitlebar || {}));
+        }, 500);
+        return function() {
+          clearInterval(id);
+        };
+      }, []);
+      const supported = Boolean(state.supported);
+      const conflict = Boolean(state.conflict);
+      const canToggle = supported && !conflict;
+      const enabled = Boolean(state.enabled) && canToggle;
+      const statusText = !supported ? t("titlebarUnsupported") : conflict ? t("titlebarConflictShort") : enabled ? t("titlebarAuto") : t("off");
+      const statusColor = !supported || conflict || !enabled ? "gray" : "green";
+      return el(
+        Box,
+        {
+          position: "relative",
+          p: 3,
+          borderRadius: "xl",
+          bg: "rgba(8,12,24,0.92)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          overflow: "hidden"
+        },
+        el(Box, {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          className: "lte-mouse-accent-line " + (enabled ? "" : "lte-mouse-paused"),
+          style: { backgroundImage: GRADIENT }
+        }),
+        el(
+          VStack,
+          { align: "stretch", spacing: 2.5, position: "relative", zIndex: 1 },
+          el(
+            HStack,
+            { justify: "space-between", align: "center" },
+            el(
+              HStack,
+              { spacing: 2, align: "center" },
+              el(Box, {
+                w: "26px",
+                h: "26px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "md",
+                bg: ACCENT + "33",
+                color: ACCENT,
+                fontSize: "xs",
+                fontWeight: "bold",
+                border: "1px solid " + ACCENT + "66"
+              }, "TB"),
+              el(Text, { fontSize: "sm", fontWeight: "bold", color: "gray.100" }, t("titlebar"))
+            ),
+            el(
+              HStack,
+              { spacing: 2, align: "center" },
+              el(Badge, { colorScheme: statusColor, variant: "solid", fontSize: "xs", borderRadius: "full", px: 2 }, statusText),
+              el(Switch, {
+                isChecked: enabled,
+                isDisabled: !canToggle,
+                colorScheme: "blue",
+                size: "sm",
+                onChange: function() {
+                  titlebarSetEnabled(!enabled);
+                }
+              })
+            )
+          ),
+          el(Text, { fontSize: "xs", color: "gray.500" }, t("titlebarDesc")),
+          !supported ? el(Text, { fontSize: "xs", color: "orange.300" }, t("titlebarUnsupportedHint")) : null,
+          conflict ? el(Text, { fontSize: "xs", color: "orange.300" }, t("titlebarConflictHint")) : null,
+          el(Text, { fontSize: "xs", color: "gray.500" }, t("titlebarHint"))
+        )
+      );
+    };
+  }

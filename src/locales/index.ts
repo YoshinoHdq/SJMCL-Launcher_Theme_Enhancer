@@ -50,6 +50,8 @@
     if (getLocal("home_show_city_weather", true)) host.actions.setHomeWidgetTitle(lteT("homeCityTitle"), "city-weather");
     if (getLocal("home_show_theme_enhancer", true)) host.actions.setHomeWidgetTitle(lteT("homeThemeTitle"), "theme-enhancer");
     if (getLocal("home_show_mouse_effects", true)) host.actions.setHomeWidgetTitle(lteT("homeMouseTitle"), "mouse-effects");
+    if (getLocal("home_show_click_effects", true)) host.actions.setHomeWidgetTitle(lteT("homeClickTitle"), "click-effects");
+    if (getLocal("home_show_titlebar", true)) host.actions.setHomeWidgetTitle(lteT("homeTitlebarTitle"), "titlebar");
   }
   function useLocale(host) {
     const [locale] = host.state.useExtensionState("locale", getSavedLocale());

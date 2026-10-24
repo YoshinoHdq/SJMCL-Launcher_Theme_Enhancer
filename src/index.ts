@@ -49,6 +49,9 @@
     for (var i = 0; i < 4; i++) lp("sculk_charge_pop_" + i, "assets/particles/sculk/sculk_charge_pop_" + i + ".png");
     syncThemeGlobals();
     restoreCursorEffects();
+    restoreClickEffects();
+    installTitlebarRuntime();
+    installReduceMotion();
     if (!isStandaloneWindow()) {
       window.setTimeout(function() {
         syncThemeGlobals();
@@ -86,6 +89,28 @@
         Component: createMouseEffectsWidget(api)
       });
     }
+    if (getLocal("home_show_click_effects", true)) {
+      homeWidgets.push({
+        key: "click-effects",
+        title: lteT("homeClickTitle"),
+        description: lteT("homeClickDesc"),
+        icon: "zap",
+        defaultWidth: 320,
+        minWidth: 260,
+        Component: createClickEffectsWidget(api)
+      });
+    }
+    if (getLocal("home_show_titlebar", true)) {
+      homeWidgets.push({
+        key: "titlebar",
+        title: lteT("homeTitlebarTitle"),
+        description: lteT("homeTitlebarDesc"),
+        icon: "panel-top",
+        defaultWidth: 300,
+        minWidth: 240,
+        Component: createTitlebarWidget(api)
+      });
+    }
     const videoWarningComponent = createVideoSizeWarningModal(api);
     return {
       homeWidgets,
@@ -113,7 +138,11 @@
       dispose: function() {
         stopThemeEffects(true);
         stopCursorEffects(true);
+        stopClickEffects(true);
+        disposeTitlebarRuntime();
+        disposeReduceMotion();
         removeKeyboardGlowListener();
+        removePianoKeyListener();
         clearVideoElement();
         _vactive = false;
         if (_videoRestoreTimer) {

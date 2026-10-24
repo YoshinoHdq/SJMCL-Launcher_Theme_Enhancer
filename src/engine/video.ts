@@ -76,6 +76,9 @@ var VIDEO_DB_NAME = "LTEVidDB";
   var _vactive = false;
   var _vpaused = false;
   var _vvol = 0.5;
+  var _venabled = getLocal("v_enabled", true);
+  var _vloop = getLocal("v_loop", true);
+  var _vlastVol = 0.5;
   var _videoAudioUnlock = null;
   var _videoRestoreTimer = null;
   var _videoPersistenceChain = Promise.resolve();
@@ -87,6 +90,15 @@ var VIDEO_DB_NAME = "LTEVidDB";
     }
   } catch (e) {
   }
+  _vlastVol = _vvol > 0 ? _vvol : 0.5;
+  function syncVideoGlobals() {
+    window._vactive = _vactive;
+    window._vpaused = _vpaused;
+    window._vvol = _vvol;
+    window._venabled = _venabled;
+    window._vloop = _vloop;
+  }
+  syncVideoGlobals();
   function releaseVideoAudioUnlock() {
     if (_videoAudioUnlock) {
       document.removeEventListener("pointerdown", _videoAudioUnlock, true);
@@ -132,9 +144,12 @@ var VIDEO_DB_NAME = "LTEVidDB";
       _vvideo = document.createElement("video");
       _vvideo.id = "lte-video-bg";
       _vvideo.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;object-fit:cover;pointer-events:none;";
-      _vvideo.loop = true;
+      _vvideo.loop = _vloop;
       _vvideo.playsInline = true;
       _vvideo.src = _vurl;
+      _vvideo.addEventListener("loadedmetadata", function() {
+        if (_vvideo && isFinite(_vvideo.duration)) setLocal("v_duration", _vvideo.duration);
+      });
     }
     if (_vvideo.parentNode !== host) host.appendChild(_vvideo);
     return _vvideo;
@@ -158,9 +173,12 @@ var VIDEO_DB_NAME = "LTEVidDB";
   }
   function videoStart(blob, restoreMode) {
     if (isStandaloneWindow()) return false;
+    if (restoreMode && !_venabled) return false;
     clearVideoElement();
     _vurl = URL.createObjectURL(blob);
     if (!mountVideoElement()) {
+      _vactive = false;
+      syncVideoGlobals();
       clearVideoElement();
       if (restoreMode) {
         if (_videoRestoreTimer) window.clearTimeout(_videoRestoreTimer);
@@ -173,6 +191,7 @@ var VIDEO_DB_NAME = "LTEVidDB";
     }
     _vactive = true;
     _vpaused = restoreMode ? Boolean(getLocal("v_paused", false)) : false;
+    syncVideoGlobals();
     if (_vpaused) {
       _vvideo.pause();
     } else {
@@ -188,6 +207,13 @@ var VIDEO_DB_NAME = "LTEVidDB";
   function requestVideoUse(file) {
     var fileName = file.name;
     setLocal("v_name", fileName);
+    setLocal("v_size", file.size);
+    setLocal("v_duration", 0);
+    if (!_venabled) {
+      _venabled = true;
+      setLocal("v_enabled", true);
+      syncVideoGlobals();
+    }
     _videoPersistenceChain = _videoPersistenceChain.catch(function() {
     }).then(function() {
       return saveVideoBlob(file);
@@ -195,6 +221,8 @@ var VIDEO_DB_NAME = "LTEVidDB";
       if (getLocal("v_name", "") === fileName) {
         try {
           localStorage.removeItem(PREFIX + "v_name");
+          localStorage.removeItem(PREFIX + "v_size");
+          localStorage.removeItem(PREFIX + "v_duration");
         } catch (e) {
         }
         notifyUser("videoSaveFailed", "error");
@@ -244,6 +272,7 @@ var VIDEO_DB_NAME = "LTEVidDB";
     if (!_vurl) return;
     if (!mountVideoElement()) return;
     _vpaused = false;
+    syncVideoGlobals();
     setLocal("v_paused", false);
     tryPlayVideo(false);
   }
@@ -251,6 +280,7 @@ var VIDEO_DB_NAME = "LTEVidDB";
     if (_vvideo) {
       _vvideo.pause();
       _vpaused = true;
+      syncVideoGlobals();
       setLocal("v_paused", true);
     }
   }
@@ -258,6 +288,7 @@ var VIDEO_DB_NAME = "LTEVidDB";
     clearVideoElement();
     _vactive = false;
     _vpaused = false;
+    syncVideoGlobals();
     if (_videoRestoreTimer) {
       window.clearTimeout(_videoRestoreTimer);
       _videoRestoreTimer = null;
@@ -265,6 +296,8 @@ var VIDEO_DB_NAME = "LTEVidDB";
     setLocal("v_paused", false);
     try {
       localStorage.removeItem(PREFIX + "v_name");
+      localStorage.removeItem(PREFIX + "v_size");
+      localStorage.removeItem(PREFIX + "v_duration");
     } catch (e) {
     }
     _videoPersistenceChain = _videoPersistenceChain.catch(function() {
@@ -274,6 +307,8 @@ var VIDEO_DB_NAME = "LTEVidDB";
   }
   function videoVolume(v) {
     _vvol = Math.max(0, Math.min(1, Number(v) || 0));
+    if (_vvol > 0) _vlastVol = _vvol;
+    syncVideoGlobals();
     if (_vvideo) {
       _vvideo.volume = _vvol;
       _vvideo.muted = false;
@@ -288,8 +323,54 @@ var VIDEO_DB_NAME = "LTEVidDB";
     } catch (e) {
     }
   }
+  function videoSetLoop(on) {
+    _vloop = Boolean(on);
+    setLocal("v_loop", _vloop);
+    syncVideoGlobals();
+    if (_vvideo) _vvideo.loop = _vloop;
+  }
+  function videoToggleMute() {
+    if (_vvol > 0) {
+      _vlastVol = _vvol;
+      videoVolume(0);
+    } else {
+      videoVolume(_vlastVol || 0.5);
+    }
+  }
+  function videoSetEnabled(on) {
+    _venabled = Boolean(on);
+    setLocal("v_enabled", _venabled);
+    syncVideoGlobals();
+    if (!_venabled) {
+      if (_vvideo) {
+        try {
+          _vvideo.pause();
+        } catch (e) {
+        }
+      }
+      clearVideoElement();
+      _vactive = false;
+      syncVideoGlobals();
+      return;
+    }
+    loadStoredVideoBlob().then(function(blob) {
+      if (!blob) {
+        _venabled = false;
+        setLocal("v_enabled", false);
+        syncVideoGlobals();
+        return;
+      }
+      videoStart(blob, false);
+    }).catch(function() {
+      _venabled = false;
+      setLocal("v_enabled", false);
+      syncVideoGlobals();
+      notifyUser("videoRestoreFailed", "warning");
+    });
+  }
   function restoreVideoBackground() {
     if (isStandaloneWindow()) return;
+    if (!_venabled) return;
     loadStoredVideoBlob().then(function(blob) {
       if (blob) videoStart(blob, true);
     }).catch(function() {
